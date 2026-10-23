@@ -1,60 +1,87 @@
-# Design Reference Report — Step 1
+# Design Reference Catalog
 
-**Version:** 0.2 | **Status:** Approved inspiration roles; screenshot review and detailed rules pending.
+**Version:** 0.3 | **Stage:** Design discovery | **Updated:** 23 October 2026
 
-## Product-wide interaction principles
+## Purpose
 
-1. **Many valid choices → equal-weight visual tiles.** Avoid suggesting that one category is the default when several are equally valid.
-2. **One clear next action → one dominant button.** Every guided expense-entry screen should clearly reveal what advances the flow.
-3. **Progress → visible throughout.** Show completed, current and upcoming steps using more than color alone.
-4. **Categories → visual marker plus readable name.** Use consistent icon/emoji-like cues; support one or multiple tags, including Unknown.
-5. **Start light and reveal progressively.** Show only what the user needs at the current step.
-6. **Mobile-first dashboard → easy scanning.** Present summary metrics, trends, then breakdowns; avoid investment-specific density.
+Four consumer mobile experiences inform distinct parts of the Expense Tracker interface. The intention is to understand useful interaction patterns, not reproduce their branding, layouts or proprietary graphics. The reference roles below reflect the selected product direction; individual screenshots have not yet been approved.
 
-## Approved reference-role matrix
+## Reference matrix
 
-| ID | App | Exact behavior to study | Where applied | Explicitly not copying |
+| ID | Reference | Design observation to investigate | Application to Expense Tracker | Excluded patterns |
 |---|---|---|---|---|
-| REF-P01 | PhonePe | Equal-weight choices, large recognizable icon-backed action options | Expense category and tag tiles; optional source selection | Super-app clutter, payments content, proprietary icons |
-| REF-D01 | Duolingo | Current/completed/upcoming progression states; motivating feedback | Expense-entry progress indicator and save confirmation | Childish illustration, heavy gamification |
-| REF-U01 | Uber | One dominant next-step CTA; focused linear decisions | Continue, Review, Save buttons on step screens | Maps, transport terminology |
-| REF-G01 | Groww **mobile** | Financial summary hierarchy, readable mobile cards/charts | Expense dashboard, trends, category breakdowns | Web dashboard structure, trading-specific features |
+| REF-P01 | PhonePe | Equal-weight icon-backed choices that remain distinguishable at a glance | Multiple categories or tags and other peer selections | Dense super-app menus and payment-specific visuals |
+| REF-D01 | Duolingo | Visually legible completed, current and upcoming stages | Expense-entry progress and save acknowledgement | Childish gamification, rewards or streaks |
+| REF-U01 | Uber | A prominent, predictable primary button on each task screen | Continue, Review and Save actions | Maps and transport-specific navigation |
+| REF-G01 | Groww **mobile** | Concise summary hierarchy, mobile cards, readable charts | Spending overview, category breakdown and trends | Desktop dashboard structure or trading information density |
 
-## Visual reference sources and screenshot targets
+## Proposed cross-product interaction principles
 
-### PhonePe
-- [PhonePe design at scale](https://design.phonepe.com/stories/role-of-design-at-scale)
-- [PhonePe redesign](https://design.phonepe.com/stories/behind-phonepe-redesign)
-- **Capture:** one mobile screen with several equal-weight icon-backed actions, one selected/action state if available.
-- **Derived candidate rule:** equivalent choices must use equivalent size, weight and interactive affordance.
+These are **design intentions to validate**, not fixed component specifications or numerical tokens.
 
-### Duolingo
-- [Guided home-screen design](https://blog.duolingo.com/new-duolingo-home-screen-design/)
-- **Capture:** one mobile screen with clearly differentiated current, completed, and upcoming progress.
-- **Derived candidate rule:** progress must be visible, understandable and not solely color-dependent.
+1. **Many choices, equal weight.** Peer category choices use consistent size, hierarchy and affordance, rather than an arbitrary featured choice.
+2. **One next step, clearly emphasized.** Each guided step has one visually dominant forward action.
+3. **Visible progression.** Current, completed and upcoming stages are differentiated with iconography/text/shape in addition to color.
+4. **Every category has a visual marker and label.** Multiple tags may be selected; Unknown is available when classification is unclear.
+5. **Progressive disclosure.** Each screen presents the minimum information required for the current decision.
+6. **Mobile-first financial summaries.** A compact top-level total precedes optional charts and detailed breakdowns. Multitag totals need careful treatment to avoid double-counting.
 
-### Uber
-- [Official ride request flow](https://help.uber.com/pa-IN/riders/article/how-to-request-a-ride-?nodeId=67f41961-e0aa-4670-af32-58be02c7c492)
-- **Capture:** one choice step with a visually dominant CTA, one confirmation screen.
-- **Derived candidate rule:** each step screen has exactly one dominant forward action, consistently placed and labeled with a verb.
+## Source material and screenshot selection
 
-### Groww mobile
-- [Groww](https://groww.in/)
-- [Groww portfolio summary](https://groww.in/updates/portfolios-on-groww)
-- [Groww portfolio analysis](https://groww.in/updates/portfolio-analysis-on-groww)
-- **Capture:** actual **mobile app** summary, readable mobile chart, and mobile breakdown. Use web content only as background reading; it must not substitute for mobile screenshots.
-- **Derived candidate rule:** the first viewport should prioritize total and essential metrics over dense charts or drilldowns.
+### REF-P01 — PhonePe: parallel choices
 
-## For Claude
-Use these as **behavioral references**, not visual templates to clone. Before selecting colors, dimensions, fonts or states, derive numbered style-guide rules from observed evidence, then named tokens, then components. Explicitly distinguish **observed** patterns, **proposed** rules and **approved** rules.
+**Primary reading:** [PhonePe redesign](https://design.phonepe.com/stories/behind-phonepe-redesign); [Design at scale](https://design.phonepe.com/stories/role-of-design-at-scale).
 
-### Traceability format required
-`reference ID → observed behavior → style-guide rule ID → design token → component property`
+**Screenshot needed:** A PhonePe mobile view containing several parallel icon-backed actions, plus a selection state if available.
 
-**Pass condition:** For one implemented or specified component, trace its property through its token to its style-guide rule without gaps. The reference provides supporting evidence, not a substitute for a rule.
+**Relevant characteristic:** Independent options appear comparable in importance, with labels and recognizable visuals.
 
-## Status
-- Reference roles: approved in conversation.
-- Source links and target screens: documented.
-- Screenshots: **not committed**.
-- Style guide/tokens/components: **not yet generated or approved**.
+### REF-D01 — Duolingo: guided progress
+
+**Primary reading:** [Duolingo home-screen redesign](https://blog.duolingo.com/new-duolingo-home-screen-design/).
+
+**Screenshot needed:** A mobile learning path that makes current and completed stages distinguishable.
+
+**Relevant characteristic:** The next activity and position within a journey are apparent.
+
+### REF-U01 — Uber: dominant action
+
+**Primary reading:** [Uber ride-request process](https://help.uber.com/pa-IN/riders/article/how-to-request-a-ride-?nodeId=67f41961-e0aa-4670-af32-58be02c7c492).
+
+**Screenshot needed:** A mobile selection screen with its forward action, ideally accompanied by the confirmation state.
+
+**Relevant characteristic:** A single action appears to advance the current step.
+
+### REF-G01 — Groww mobile: financial overview
+
+**Primary reading:** [Groww](https://groww.in/); [Portfolio overview](https://groww.in/updates/portfolios-on-groww); [Portfolio analysis](https://groww.in/updates/portfolio-analysis-on-groww).
+
+**Screenshot needed:** Actual mobile application screens showing summary metrics, a chart and a breakdown. The webpages above provide background context, not substitutes for mobile screenshots.
+
+**Relevant characteristic:** Financial information is introduced at a digestible level, followed by details.
+
+## Image records
+
+The following are **not yet collected**: PhonePe mobile examples, Duolingo path, Uber action and confirmation, and Groww mobile dashboard. Their respective directories are reserved for approved reference assets.
+
+When a screenshot is selected, its record should capture:
+
+| Field | Description |
+|---|---|
+| Reference ID | One of the IDs above |
+| File | Relative image path, if committed |
+| Source | Original page or app |
+| Capture date | When the reference was collected |
+| Observed detail | What is actually visible |
+| Design implication | How it informs Expense Tracker |
+| Status | Candidate, reviewed, approved or rejected |
+
+Third-party assets should not be committed to the public repository without appropriate rights or permission.
+
+## Design-system evidence
+
+Once observations have been reviewed, design-system documentation will establish an auditable chain:
+
+**Reference → observed pattern → numbered style-guide rule → named design token → component property**
+
+The Step 1 acceptance criterion requires at least one component property to trace back to a specific rule via its token without a missing link. No such completed chain is claimed yet.
