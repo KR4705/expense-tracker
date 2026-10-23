@@ -12,7 +12,7 @@ Create a reusable, **read-only** Claude Code subagent that audits frontend imple
 
 | Item | Outcome |
 |---|---|
-| Subagent | [`.claude/agents/design-compliance-auditor.md`](../../../.claude/agents/design-compliance-auditor.md) — tools limited to `Read`, `Grep`, `Glob` (no edit, write or shell) |
+| Subagent | [`.claude/agents/design-compliance-auditor.md`](../../.claude/agents/design-compliance-auditor.md) — tools limited to `Read`, `Grep`, `Glob` (no edit, write or shell) |
 | Baseline on compliant code | **0** confirmed violations (no false positives) |
 | Detection | **3 / 3** violations found, each with the correct SG rule ID and accurate file:line |
 | Restoration | `CategoryTile` restored; `src/` byte-identical to `main`; all tests pass |
@@ -81,7 +81,7 @@ The prompt did not mention that violations existed, how many there were, or whic
 
 ```bash
 git checkout feat/design-compliance-auditor
-git apply docs/airtribe/step-03/violations.diff   # re-introduce the violations
+git apply docs/subagent_run/violations.diff   # re-introduce the violations
 # In Claude Code: ask the design-compliance-auditor subagent to audit the files above
 git checkout -- src/                               # restore
 ```

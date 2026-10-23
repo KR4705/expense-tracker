@@ -21,7 +21,7 @@ The violations were introduced in a single commit and removed with `git revert`,
 | No planted patterns left | `grep -rnE "padding: 10px\|text-overflow: ellipsis" src` | No matches |
 | Badge rendering restored | `CategoryTile.tsx` lines 47–51 contain `{selected ? (<span className={styles.badge}…` and line 1 imports `Check` | Present |
 | Full project validation | `npm run validate` (token check, category validation, 48 data tests, 21 UI tests, typecheck) | Exit 0: **48/48 data tests and 21/21 UI tests pass**, including `marks selected tiles with a check badge`, which failed on the violated code |
-| Diff still reproduces the experiment | `git apply --check docs/airtribe/step-03/violations.diff` | Applies cleanly to the restored tree (see README) |
+| Diff still reproduces the experiment | `git apply --check docs/subagent_run/violations.diff` | Applies cleanly to the restored tree (see README) |
 
 ## Not verified
 
