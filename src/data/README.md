@@ -1,99 +1,128 @@
 # Category data
 
-**Status: provisional.** Nothing in this folder is approved product scope yet. Every category and the icon set are marked `"status": "provisional"` until the product owner approves them (Style Guide Appendix B, question 2). See [Open decisions](#open-decisions).
+**Status:** IDs, most labels and the icon set are approved by the product owner (24 October 2026). The file as a whole stays **provisional** until the items under [Still to confirm](#still-to-confirm) are signed off.
 
 | File | Purpose |
 |---|---|
-| `categories.json` | The category list shown on the Categories step (Step 2), in display order. |
-| `category-icons.json` | Registry of allowed icon identifiers, the proposed icon set, and the icon reserved for Unknown. |
+| `categories.json` | The category list for the Categories step (Step 2), in display order. |
+| `category-icons.json` | Allowed icon identifiers (Lucide), and the icon reserved for Other. |
 | `../../scripts/validate-categories.mjs` | Executable validator (`npm run categories:validate`). |
 | `../../tests/categories.test.mjs` | Positive and negative tests (`npm test`). |
 
 No UI uses this data yet.
 
+## Current list
+
+| Order | Label | ID | Icon (Lucide) | Status |
+|---|---|---|---|---|
+| 1 | Food | `food` | `utensils` | approved |
+| 2 | Shop | `shopping` | `shopping-bag` | approved |
+| 3 | Home | `housing` | `house` | provisional — label chosen to fit |
+| 4 | Transit | `transport` | `car` | provisional — label chosen to fit |
+| 5 | Fun | `entertainment` | `clapperboard` | approved |
+| 6 | Health | `healthcare` | `heart-pulse` | approved |
+| 7 | Travel | `travel` | `plane` | approved |
+| 8 | Charity | `charity` | `hand-heart` | approved |
+| 9 | Other | `other` | `circle-ellipsis` | provisional — combining behavior to confirm |
+
+**Why IDs and labels differ.** IDs are the approved permanent keys; labels are what the user sees. A label can change later without migrating saved expenses.
+
+**Fit at 320 px.** All nine labels fit on one line in a 3-column tile even at 320 px. The widest is "Charity" at 53 px, against 60 px of label space (Inter 15 px semibold; space = tile width − 2 × 12 px padding − 2 × 2 px selected border). Nine tiles make three full rows, with Other last.
+
+## Product decisions (24 October 2026)
+
+| # | Question | Decision | How it's applied |
+|---|---|---|---|
+| 1 | Miscellaneous was missing | Use **Other** | `other` added. |
+| 2 | Labels too wide for a tile | Use shorter, simpler words | Shop, Fun, Health as directed. Home and Transit chosen to fit; see below. |
+| 3 | Icon set | **Lucide** approved | `category-icons.json` status `approved`. Not installed until tiles are built. |
+| 4 | Housing vs Bills | **Bills is part of Home** | `bills` removed; its scope moved into Home's description. |
+| 5 | Display order | Biggest expenses first, from a major survey | Ranked by HCES 2023-24; see [Display order](#display-order). |
+| 6 | Unknown | **Removed; Other replaces it** | `unknown` removed and reserved, so it can't be re-added by mistake. |
+| 7 | Meaning of `active: false` | **Inaccessible, not hidden** | Inactive categories are still shown but can't be selected. |
+| 8 | IDs | **Approved** | Existing IDs kept for surviving categories. |
+
+## Display order
+
+Order is by each category's share of **urban** household spending in the Ministry of Statistics and Programme Implementation's **Household Consumption Expenditure Survey (HCES) 2023-24**. This is India's official, nationally representative consumption survey.
+
+Figures are the percentage of monthly per-capita consumption expenditure (MPCE):
+
+- **Main source:** [HCES 2023-24 final report](https://mospi.gov.in/sites/default/files/publication_reports/Final_Report_HCES_2023-24L.pdf) (NSS Report 592), Table 3.5.
+- **Clothing, bedding & footwear:** from the [HCES 2023-24 fact sheet press note](https://www.mospi.gov.in/sites/default/files/press_release/HCES_Press_Note_2023-24_27122024_rev.pdf), Figure 7.
+
+| Order | Category | Survey item groups mapped | Urban share |
+|---|---|---|---|
+| 1 | Food | Food total | 39.68 % |
+| 2 | Shop | Durable goods (6.87) + clothing, bedding & footwear (5.66) | 12.53 % |
+| 3 | Home | Rent (6.58) + fuel and light (5.59) | 12.17 % |
+| 4 | Transit | Conveyance | 8.46 % |
+| 5 | Fun | Miscellaneous goods & entertainment | ≤ 6.92 % (upper bound) |
+| 6 | Health | Medical | 5.85 % |
+| 7 | Travel | No separate survey line | — |
+| 8 | Charity | Not measured (donations are transfers, not consumption) | — |
+| 9 | Other | Catch-all; always last | — |
+
+Categories with no survey line come after those with one, in the order of the original list. Survey groups with no category (education 5.97 %, other consumer services 5.72 %, pan and tobacco 2.37 %) would be recorded under the closest category or Other.
+
+**Caveats — the order is provisional:**
+
+- **Shop vs Home are 0.36 points apart.** Phone, internet and subscriptions (now part of Home) sit inside the survey's "consumer services" group, which isn't broken down. Counting them would likely put Home above Shop.
+- **Fun's figure is an upper bound.** The survey combines entertainment with miscellaneous goods such as toiletries, and doesn't publish entertainment alone (nor did the 2022-23 round). Entertainment by itself may be below Health's 5.85 %.
+- **Survey population differs from the target users.** HCES describes the average urban household, not the high-spending audience in the Product Vision. High spenders likely put more into Travel and Shop. Revisit the order once real usage data exists.
+
 ## Category record
 
 | Field | Type | Required | Rules |
 |---|---|---|---|
-| `id` | string | yes | Lower-case kebab-case, unique, stable. Saved with expenses, so it must never change once data is stored. Maps to the `categoryId` property in the CategoryTile / CategoryGrid specs. `uncategorized` is reserved. |
+| `id` | string | yes | Lower-case kebab-case, unique, approved and permanent once expenses are stored. Maps to `categoryId` in the CategoryTile / CategoryGrid specs. `uncategorized` and `unknown` are reserved. |
 | `label` | string | yes | 1–2 words, sentence case, unique (case-insensitive) — SG-27. |
 | `icon` | string | yes | An `id` from `category-icons.json`; each category uses a different icon (SG-21, SG-22). |
 | `displayOrder` | integer ≥ 1 | yes | Unique. The file is kept sorted by it. Gaps are allowed. |
-| `active` | boolean | yes | `false` hides a category from the picker while keeping it valid for existing expenses (provisional meaning — see decision 7). |
-| `exclusive` | boolean | yes | `true` only for Unknown (SG-26). |
+| `active` | boolean | yes | `false` = **inaccessible, not hidden**. The tile is shown in its disabled state and can't be selected (decision 7). |
 | `status` | `"provisional"` \| `"approved"` | yes | Review state of this entry. |
 | `description` | string | no | Intended scope, for reviewers and future help text. Not shown in the UI. |
 
-Unknown fields are rejected so typos (e.g. `dispalyOrder`) can't slip through.
+File-level fields: `version` (semver), `status`, `categories`, and optional `note` and `orderBasis`. Unknown fields are rejected so typos can't slip through. The old `exclusive` flag is gone, because no category is exclusive any more.
 
 ## Rules the validator enforces
 
-- **Required fields and types:** all of the above, plus file-level `version` (semver), `status` and a non-empty `categories` array.
-- **Uniqueness:** IDs, labels (case-insensitive), display orders, and icons.
+- **Required fields and types:** all fields above are present with the right types.
+- **Uniqueness:** IDs, labels (case-insensitive), display orders and icons are all unique.
 - **Ordering:** the list is sorted by ascending `displayOrder`.
-- **Icons:** every icon exists in the registry, and the registry is itself valid (unique IDs, `unknownIcon` listed).
-- **Unknown (SG-26):**
-  - Exactly one category is `exclusive`, and it is `unknown`, labelled `Unknown`.
-  - It is always active.
+- **Icons:** every icon exists in the registry, and the registry itself is valid.
+- **Labels:** 1–2 words in sentence case (SG-27).
+- **Reserved IDs:**
+  - `uncategorized`: zero selections is saved as Uncategorized, which is a state, not a category.
+  - `unknown`: removed by decision 6.
+- **Other:**
+  - It is present, labelled "Other" and always active.
   - It has the highest `displayOrder`, so it is always the last tile.
-  - It uses the neutral question-mark icon, which no other category may use.
-- **Uncategorized:** zero selections is saved as Uncategorized (SG-26). It is a state, not a category, so `uncategorized` can't be used as an ID.
-- At least one active, non-exclusive category exists.
+  - It uses `circle-ellipsis`, which no other category may use.
+- **At least one active category besides Other.**
 
-**Not enforced here:** the selection behavior itself — selecting Unknown clears other categories, and selecting another category clears Unknown. That logic belongs to CategoryGrid and will be implemented and tested with it. The data only marks which category is exclusive.
+## Still to confirm
 
-## Icon set (provisional)
+1. **Other's selection behavior.** Other is treated as an ordinary category that **combines** with others (e.g. Food + Other), as Miscellaneous did.
+   - **Why:** the old "clears everything else" rule existed because "Unknown" contradicts any other tag; "Other" doesn't.
+   - **If you want it exclusive** (selecting Other clears the rest), that's a small data and validator change.
+2. **Labels Home and Transit.** These were chosen to fit at 320 px:
+   - "Housing" is 59.5 of 60 px, too tight.
+   - "Transport" (71 px) and "Commute" (69 px) don't fit.
 
-Icon identifiers are [Lucide](https://lucide.dev) canonical names (ISC licence).
+   Alternatives that fit: "Rides" (40 px) for Transit.
+3. **Display order.** See the caveats above, especially Shop vs Home and Fun vs Health.
 
-- **Why Lucide:** it matches the Style Guide's icon proposal (outline style, 2 px stroke, rounded joins, 24 px grid).
-- **Checked:** every identifier was confirmed to exist in `lucide-static` 1.61.0.
-- **Not decided:** Lucide is **not installed and not approved**. If another set is chosen, only `category-icons.json` and the `icon` values change.
+## Documentation that now disagrees with these decisions
 
-| Category | Icon | Alternatives considered |
+Decisions 1, 4, 6 and 7 change rules written in the Vision, Style Guide and component specs. Per this task's constraints, those documents were **not** edited here; they need a separate docs PR:
+
+| Document | Current text | Needs updating to |
 |---|---|---|
-| Food | `utensils` | — |
-| Shopping | `shopping-bag` | — |
-| Transport | `car` | `bus` |
-| Housing | `house` | — |
-| Entertainment | `clapperboard` | `ticket`, `film` |
-| Healthcare | `heart-pulse` | `stethoscope` |
-| Travel | `plane` | — |
-| Charity | `hand-heart` | — |
-| Bills | `receipt` | — |
-| Unknown | `circle-question-mark` | — (SG-26: neutral question mark) |
-
-## Open decisions
-
-These need product-owner approval. Until then the data stays `provisional`.
-
-1. **Miscellaneous is missing.**
-   - **Conflict:** Product Vision §4.5 says "`Unknown` and `Miscellaneous` must be valid choices", and SG-26 and CategoryGrid (§6.2, acceptance criterion 3) describe Miscellaneous as a normal, combinable category. The requested list doesn't include it, so it has not been added.
-   - **Option A:** add it as a standard, non-exclusive category just before Unknown.
-   - **Option B:** amend the Vision and specs to drop it.
-   - **Watch out:** the label "Miscellaneous" is 105 px wide, so it has the same fit problem as decision 2; a shorter label such as "Other" (40 px) would fit.
-2. **Some labels don't fit a tile.** Measured in Inter 15 px semibold (the selected-tile weight) against the label space inside a 3-column tile (tile width − 2 × 12 px padding − 2 × 2 px selected border):
-
-   | Viewport | Label space | Labels that overflow |
-   |---|---|---|
-   | 320 px | 60 px | Entertainment, Healthcare, Shopping, Transport, Housing, **Unknown** |
-   | 360 px | 73 px | Entertainment (102 px), Healthcare (80 px) |
-   | 390 px | 83 px | Entertainment |
-   | 430 px | 97 px | Entertainment |
-
-   - **Why it matters:** single words can't wrap, and SG-27 forbids shrinking or truncating; the CategoryTile spec (§8) says such a category should be renamed.
-   - **Option A — rename:** e.g. "Entertainment" → "Leisure" (53 px), "Fun" (27 px) or "Outings" (57 px), and "Healthcare" → "Health" (48 px) or "Medical" (57 px).
-   - **Option B — hyphenate:** allow automatic hyphenation inside tiles.
-   - **The 320 px case** affects the required label "Unknown", so renaming alone can't fix it. It needs a design-system decision on tile padding or the 2-column fallback (open decision D-3). No tokens or rules were changed here.
-3. **Icon set and icon choices.** Approve Lucide (or another single set) and the icon per category; alternatives are listed above.
-4. **Category boundaries.** The `description` fields propose scopes for pairs that users may confuse:
-   - **Transport vs Travel:** day-to-day travel vs trips away from home.
-   - **Housing vs Bills:** rent and upkeep vs recurring utilities and subscriptions.
-
-   Confirm or adjust. Overlap is allowed by design (multi-tag), but clear scopes help users choose.
-5. **Display order.** The order follows the requested list; there is no usage data to justify another.
-   - **Layout:** with 10 tiles in 3 columns, Unknown sits alone on the 4th row.
-   - **Fit at 360 × 640:** it will likely need one scroll, which SG-26's acceptance criterion allows ("reachable within one scroll").
-6. **Unknown exclusivity.** The data marks Unknown `exclusive: true`, following SG-26 and the CategoryGrid spec. The Style Guide still lists this as needing confirmation (SG-26 basis note; Appendix B, question 1).
-7. **Meaning of `active: false`.** Proposed meaning: hidden from the picker, still valid on existing expenses. Confirm before the save workflow is specified.
-8. **IDs become permanent once expenses are stored.** Approve the IDs (`food`, `shopping`, `transport`, `housing`, `entertainment`, `healthcare`, `travel`, `charity`, `bills`, `unknown`) before any persistence work. A label can be renamed later without changing its ID.
+| Product Vision §4.5, §5 | "`Unknown` and `Miscellaneous` must be valid choices"; Step 2 mentions "select Unknown" | Other is the catch-all choice |
+| Style Guide SG-26 | Unknown is always present and last, uses a question-mark icon, and is mutually exclusive; Miscellaneous combines freely | Other is always present and last, uses the "more" icon, and combines (pending item 1). Zero selections is still saved as Uncategorized. |
+| Style Guide SG-41 | "Unknown, clears other categories" announcement | Remove (or adapt, if Other becomes exclusive) |
+| Style Guide §A.3, Appendix B Q1–Q2 | Unknown flow; category list open | Update / close |
+| CategoryTile §4, §7, acceptance 7 | `exclusive` property, Unknown variant and announcement | Drop the Unknown variant. Disabled state now has an MVP use: inactive categories. |
+| CategoryGrid §4, §6.2, §7, acceptance 2, 3, 5 | Exactly one exclusive Unknown; exclusivity table and announcements | Other always last; no exclusivity (pending item 1) |
+| Component README D-4, D-6 | Undo after Unknown clears; disabled tile has no MVP use | D-4 no longer applies; D-6 resolved by decision 7 |

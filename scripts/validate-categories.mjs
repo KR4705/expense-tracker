@@ -3,14 +3,15 @@
  * Category data validation.
  *
  * Checks src/data/categories.json against src/data/category-icons.json and the
- * Style Guide rules that the data must uphold:
+ * rules the data must uphold:
  *   SG-21/22  every category has a label and a distinct icon from one icon set
- *   SG-26     exactly one exclusive Unknown category: always present, active,
- *             last in display order, neutral question-mark icon
  *   SG-27     labels are 1–2 words in sentence case
+ *   Other     exactly one "Other" category: always present, always active,
+ *             last in display order, using the reserved "more" icon
+ *             (product decision, 24 Oct 2026 — replaces Unknown and Miscellaneous)
  * plus data-integrity rules: required fields and types, no unknown fields,
- * unique IDs / labels / display orders, file order matches display order, and
- * the reserved "uncategorized" ID (an expense with zero tags) is never a category.
+ * unique IDs / labels / display orders / icons, file order matches display
+ * order, and reserved IDs are never used.
  *
  * Usage:  node scripts/validate-categories.mjs [--data <path>] [--icons <path>]
  *         (exit 0 = valid, 1 = invalid; paths default to the files in src/data/)
@@ -22,10 +23,13 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 export const STATUSES = ['provisional', 'approved'];
-export const UNKNOWN_ID = 'unknown';
-export const UNKNOWN_LABEL = 'Unknown';
-/** Zero selected categories is saved as "Uncategorized" (SG-26); it is a state, not a category. */
-export const RESERVED_IDS = ['uncategorized'];
+export const OTHER_ID = 'other';
+export const OTHER_LABEL = 'Other';
+/** IDs that must never be categories, with the reason shown in the error. */
+export const RESERVED_IDS = {
+  uncategorized: 'zero selections is saved as Uncategorized — a state, not a category (SG-26)',
+  unknown: 'Unknown was removed by product decision; use "other"',
+};
 
 const ID_PATTERN = /^[a-z][a-z0-9]*(-[a-z0-9]+)*$/;
 const SEMVER = /^\d+\.\d+\.\d+$/;
@@ -36,12 +40,11 @@ const CATEGORY_FIELDS = {
   icon: 'string',
   displayOrder: 'integer',
   active: 'boolean',
-  exclusive: 'boolean',
   status: 'string',
 };
 const OPTIONAL_CATEGORY_FIELDS = { description: 'string' };
 const FILE_FIELDS = { version: 'string', status: 'string', categories: 'array' };
-const OPTIONAL_FILE_FIELDS = { $schema: 'string', note: 'string' };
+const OPTIONAL_FILE_FIELDS = { $schema: 'string', note: 'string', orderBasis: 'string' };
 
 const isObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 
@@ -106,8 +109,8 @@ export function validateIconRegistry(registry) {
       errors.push(`${where}.id: duplicate icon id "${icon.id}"`);
     } else seen.add(icon.id);
   });
-  if (typeof registry.unknownIcon !== 'string' || !seen.has(registry.unknownIcon)) {
-    errors.push('icon registry: "unknownIcon" must name an icon listed in "icons"');
+  if (typeof registry.otherIcon !== 'string' || !seen.has(registry.otherIcon)) {
+    errors.push('icon registry: "otherIcon" must name an icon listed in "icons"');
   }
   return errors;
 }
@@ -145,9 +148,7 @@ export function validateCategories(data, registry) {
 
     if (typeof c.id === 'string') {
       if (!ID_PATTERN.test(c.id)) errors.push(`${where}.id${name}: must be lower-case kebab-case`);
-      if (RESERVED_IDS.includes(c.id)) {
-        errors.push(`${where}.id${name}: reserved — zero selections are saved as Uncategorized, not as a category (SG-26)`);
-      }
+      if (Object.hasOwn(RESERVED_IDS, c.id)) errors.push(`${where}.id${name}: reserved — ${RESERVED_IDS[c.id]}`);
       if (ids.has(c.id)) errors.push(`${where}.id: duplicate id "${c.id}" (also categories[${ids.get(c.id)}])`);
       else ids.set(c.id, i);
     }
@@ -183,36 +184,29 @@ export function validateCategories(data, registry) {
     }
   }
 
-  // SG-26: exactly one exclusive category, and it is Unknown.
+  // Other: the catch-all. Always present, always selectable, always last.
   const all = data.categories.filter(isObject);
-  const exclusive = all.filter((c) => c.exclusive === true);
-  const unknown = all.find((c) => c.id === UNKNOWN_ID);
-  if (!unknown) errors.push(`SG-26: an "${UNKNOWN_ID}" category is required`);
-  if (exclusive.length !== 1) {
-    errors.push(`SG-26: exactly one category must be exclusive (found ${exclusive.length})`);
-  }
-  for (const c of exclusive) {
-    if (c.id !== UNKNOWN_ID) errors.push(`SG-26: only "${UNKNOWN_ID}" may be exclusive ("${c.id}" is marked exclusive)`);
-  }
-  if (unknown) {
-    if (unknown.exclusive !== true) errors.push(`SG-26: "${UNKNOWN_ID}" must have exclusive: true`);
-    if (unknown.active !== true) errors.push(`SG-26: "${UNKNOWN_ID}" must always be active`);
-    if (unknown.label !== UNKNOWN_LABEL) errors.push(`SG-26: "${UNKNOWN_ID}" must be labelled "${UNKNOWN_LABEL}"`);
-    if (unknown.icon !== registry.unknownIcon) {
-      errors.push(`SG-26: "${UNKNOWN_ID}" must use the neutral question-mark icon "${registry.unknownIcon}"`);
+  const other = all.find((c) => c.id === OTHER_ID);
+  if (!other) {
+    errors.push(`Other: an "${OTHER_ID}" category is required`);
+  } else {
+    if (other.active !== true) errors.push(`Other: "${OTHER_ID}" must always be active`);
+    if (other.label !== OTHER_LABEL) errors.push(`Other: "${OTHER_ID}" must be labelled "${OTHER_LABEL}"`);
+    if (other.icon !== registry.otherIcon) {
+      errors.push(`Other: "${OTHER_ID}" must use the icon "${registry.otherIcon}"`);
     }
     const maxOrder = Math.max(...all.map((c) => (Number.isInteger(c.displayOrder) ? c.displayOrder : -Infinity)));
-    if (Number.isInteger(unknown.displayOrder) && unknown.displayOrder !== maxOrder) {
-      errors.push(`SG-26: "${UNKNOWN_ID}" must have the highest displayOrder so it is always the last tile`);
+    if (Number.isInteger(other.displayOrder) && other.displayOrder !== maxOrder) {
+      errors.push(`Other: "${OTHER_ID}" must have the highest displayOrder so it is always the last tile`);
     }
   }
   for (const c of all) {
-    if (c.id !== UNKNOWN_ID && c.icon === registry.unknownIcon) {
-      errors.push(`SG-26: icon "${registry.unknownIcon}" is reserved for "${UNKNOWN_ID}" (used by "${c.id}")`);
+    if (c.id !== OTHER_ID && c.icon === registry.otherIcon) {
+      errors.push(`Other: icon "${registry.otherIcon}" is reserved for "${OTHER_ID}" (used by "${c.id}")`);
     }
   }
-  if (!all.some((c) => c.active === true && c.exclusive === false)) {
-    errors.push('categories: at least one active, non-exclusive category is required');
+  if (!all.some((c) => c.active === true && c.id !== OTHER_ID)) {
+    errors.push(`categories: at least one active category besides "${OTHER_ID}" is required`);
   }
 
   return errors;

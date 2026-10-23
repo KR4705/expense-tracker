@@ -10,6 +10,7 @@ import { tmpdir } from 'node:os';
 import { validateCategories, validateIconRegistry } from '../scripts/validate-categories.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const SCRIPT = resolve(root, 'scripts/validate-categories.mjs');
 const load = (p) => JSON.parse(readFileSync(resolve(root, p), 'utf8'));
 const realData = load('src/data/categories.json');
 const realRegistry = load('src/data/category-icons.json');
@@ -29,6 +30,18 @@ function assertInvalid(d, pattern, reg = registry()) {
   );
 }
 
+/** Runs the CLI against a temporary copy of `json` (string or object). */
+function runCliOn(json) {
+  const dir = mkdtempSync(join(tmpdir(), 'categories-test-'));
+  try {
+    const path = join(dir, 'categories.json');
+    writeFileSync(path, typeof json === 'string' ? json : JSON.stringify(json));
+    return spawnSync(process.execPath, [SCRIPT, '--data', path], { encoding: 'utf8' });
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
 describe('valid data', () => {
   test('the committed dataset passes', () => {
     assert.deepEqual(validateCategories(realData, realRegistry), []);
@@ -38,32 +51,40 @@ describe('valid data', () => {
     assert.deepEqual(validateIconRegistry(realRegistry), []);
   });
 
-  test('contains the requested categories in the requested order, Unknown last', () => {
+  test('contains the decided categories, largest expected spend first, Other last', () => {
     assert.deepEqual(
       realData.categories.map((c) => c.label),
-      ['Food', 'Shopping', 'Transport', 'Housing', 'Entertainment', 'Healthcare', 'Travel', 'Charity', 'Bills', 'Unknown'],
+      ['Food', 'Shop', 'Home', 'Transit', 'Fun', 'Health', 'Travel', 'Charity', 'Other'],
     );
   });
 
-  test('Unknown is the only exclusive category and is active', () => {
-    const exclusive = realData.categories.filter((c) => c.exclusive);
-    assert.deepEqual(exclusive.map((c) => c.id), ['unknown']);
-    assert.equal(exclusive[0].active, true);
+  test('keeps the approved IDs and has no Bills or Unknown category', () => {
+    assert.deepEqual(
+      realData.categories.map((c) => c.id),
+      ['food', 'shopping', 'housing', 'transport', 'entertainment', 'healthcare', 'travel', 'charity', 'other'],
+    );
   });
 
-  test('nothing is marked approved yet', () => {
+  test('Other is active, last and uses the reserved icon', () => {
+    const other = realData.categories.at(-1);
+    assert.equal(other.id, 'other');
+    assert.equal(other.active, true);
+    assert.equal(other.icon, realRegistry.otherIcon);
+  });
+
+  test('entries awaiting confirmation stay provisional', () => {
     assert.equal(realData.status, 'provisional');
-    assert.ok(realData.categories.every((c) => c.status === 'provisional'));
-    assert.equal(realRegistry.status, 'provisional');
+    const provisional = realData.categories.filter((c) => c.status === 'provisional').map((c) => c.id);
+    assert.deepEqual(provisional, ['housing', 'transport', 'other']);
   });
 
-  test('a minimal dataset (one category + Unknown) passes', () => {
+  test('a minimal dataset (one category + Other) passes', () => {
     const d = {
       version: '1.0.0',
       status: 'approved',
       categories: [
-        { id: 'food', label: 'Food', icon: 'utensils', displayOrder: 1, active: true, exclusive: false, status: 'approved' },
-        { id: 'unknown', label: 'Unknown', icon: 'circle-question-mark', displayOrder: 2, active: true, exclusive: true, status: 'approved' },
+        { id: 'food', label: 'Food', icon: 'utensils', displayOrder: 1, active: true, status: 'approved' },
+        { id: 'other', label: 'Other', icon: 'circle-ellipsis', displayOrder: 2, active: true, status: 'approved' },
       ],
     };
     assert.deepEqual(validateCategories(d, registry()), []);
@@ -76,21 +97,21 @@ describe('valid data', () => {
     assert.deepEqual(validateCategories(d, registry()), []);
   });
 
-  test('an inactive standard category is allowed (kept for history)', () => {
+  test('an inactive standard category is allowed (shown but not selectable)', () => {
     const d = data();
     byId(d, 'charity').active = false;
     assert.deepEqual(validateCategories(d, registry()), []);
   });
 
   test('CLI exits 0 on the committed data', () => {
-    const r = spawnSync(process.execPath, [resolve(root, 'scripts/validate-categories.mjs')], { encoding: 'utf8' });
+    const r = spawnSync(process.execPath, [SCRIPT], { encoding: 'utf8' });
     assert.equal(r.status, 0, r.stderr);
     assert.match(r.stdout, /categories: OK/);
   });
 });
 
 describe('required fields and types', () => {
-  for (const field of ['id', 'label', 'icon', 'displayOrder', 'active', 'exclusive', 'status']) {
+  for (const field of ['id', 'label', 'icon', 'displayOrder', 'active', 'status']) {
     test(`missing "${field}" is rejected`, () => {
       const d = data();
       delete byId(d, 'food')[field];
@@ -102,17 +123,20 @@ describe('required fields and types', () => {
     const d = data();
     byId(d, 'food').active = 'yes';
     byId(d, 'shopping').displayOrder = 2.5;
-    byId(d, 'transport').exclusive = 0;
+    byId(d, 'travel').label = 7;
     const errors = validateCategories(d, registry());
     assert.ok(errors.some((e) => /active: expected boolean, got string/.test(e)));
     assert.ok(errors.some((e) => /displayOrder: expected integer, got number/.test(e)));
-    assert.ok(errors.some((e) => /exclusive: expected boolean, got integer/.test(e)));
+    assert.ok(errors.some((e) => /label: expected string, got integer/.test(e)));
   });
 
-  test('unknown fields are rejected', () => {
+  test('unknown fields are rejected (including the removed "exclusive" flag)', () => {
     const d = data();
     byId(d, 'food').colour = '#FF0000';
-    assertInvalid(d, /unknown field "colour"/);
+    byId(d, 'other').exclusive = true;
+    const errors = validateCategories(d, registry());
+    assert.ok(errors.some((e) => /unknown field "colour"/.test(e)));
+    assert.ok(errors.some((e) => /unknown field "exclusive"/.test(e)));
   });
 
   test('an invalid status is rejected', () => {
@@ -153,7 +177,13 @@ describe('IDs and labels', () => {
   test('the reserved "uncategorized" ID is rejected', () => {
     const d = data();
     byId(d, 'charity').id = 'uncategorized';
-    assertInvalid(d, /reserved — zero selections are saved as Uncategorized/);
+    assertInvalid(d, /reserved — zero selections is saved as Uncategorized/);
+  });
+
+  test('re-adding an "unknown" category is rejected', () => {
+    const d = data();
+    byId(d, 'charity').id = 'unknown';
+    assertInvalid(d, /reserved — Unknown was removed by product decision/);
   });
 
   test('duplicate labels (case-insensitive) are rejected', () => {
@@ -164,26 +194,26 @@ describe('IDs and labels', () => {
 
   test('labels longer than two words are rejected (SG-27)', () => {
     const d = data();
-    byId(d, 'bills').label = 'Bills and utilities';
+    byId(d, 'housing').label = 'Home and bills';
     assertInvalid(d, /has 3 words \(max 2, SG-27\)/);
   });
 
   test('labels not in sentence case are rejected (SG-27)', () => {
     const d = data();
     byId(d, 'food').label = 'food';
-    byId(d, 'bills').label = 'Phone Bills';
+    byId(d, 'housing').label = 'Home Bills';
     const errors = validateCategories(d, registry());
     assert.ok(errors.some((e) => /"food" must start with a capital letter/.test(e)));
-    assert.ok(errors.some((e) => /"Phone Bills" must be sentence case/.test(e)));
+    assert.ok(errors.some((e) => /"Home Bills" must be sentence case/.test(e)));
   });
 
   test('empty or padded labels are rejected', () => {
     const d = data();
     byId(d, 'food').label = '   ';
-    byId(d, 'bills').label = ' Bills';
+    byId(d, 'travel').label = ' Travel';
     const errors = validateCategories(d, registry());
     assert.ok(errors.some((e) => /"   " is empty/.test(e)));
-    assert.ok(errors.some((e) => /" Bills" has leading, trailing or repeated spaces/.test(e)));
+    assert.ok(errors.some((e) => /" Travel" has leading, trailing or repeated spaces/.test(e)));
   });
 });
 
@@ -220,17 +250,17 @@ describe('icons', () => {
     assertInvalid(d, /"car" is already used by/);
   });
 
-  test('the Unknown question-mark icon cannot be used by another category', () => {
+  test('the Other icon cannot be used by another category', () => {
     const d = data();
-    byId(d, 'bills').icon = 'circle-question-mark';
-    assertInvalid(d, /icon "circle-question-mark" is reserved for "unknown"/);
+    byId(d, 'charity').icon = 'circle-ellipsis';
+    assertInvalid(d, /icon "circle-ellipsis" is reserved for "other"/);
   });
 
-  test('a registry whose unknownIcon is not listed is rejected', () => {
+  test('a registry whose otherIcon is not listed is rejected', () => {
     const reg = registry();
-    reg.unknownIcon = 'help';
-    assert.ok(validateIconRegistry(reg).some((e) => /"unknownIcon" must name an icon listed/.test(e)));
-    assertInvalid(data(), /"unknownIcon" must name an icon listed/, reg);
+    reg.otherIcon = 'dots';
+    assert.ok(validateIconRegistry(reg).some((e) => /"otherIcon" must name an icon listed/.test(e)));
+    assertInvalid(data(), /"otherIcon" must name an icon listed/, reg);
   });
 
   test('a registry with duplicate icon IDs is rejected', () => {
@@ -240,97 +270,61 @@ describe('icons', () => {
   });
 });
 
-describe('Unknown rules (SG-26)', () => {
-  test('a dataset without Unknown is rejected', () => {
+describe('Other rules', () => {
+  test('a dataset without Other is rejected', () => {
     const d = data();
-    d.categories = d.categories.filter((c) => c.id !== 'unknown');
-    const errors = validateCategories(d, registry());
-    assert.ok(errors.some((e) => /an "unknown" category is required/.test(e)));
-    assert.ok(errors.some((e) => /exactly one category must be exclusive \(found 0\)/.test(e)));
+    d.categories = d.categories.filter((c) => c.id !== 'other');
+    assertInvalid(d, /an "other" category is required/);
   });
 
-  test('Unknown not in last position is rejected', () => {
-    // Move Unknown to the middle and renumber, so the list stays sorted and unique.
+  test('Other not in last position is rejected', () => {
+    // Move Other to the middle and renumber, so the list stays sorted and unique.
     const d = data();
-    const unknown = d.categories.pop();
-    d.categories.splice(4, 0, unknown);
+    const other = d.categories.pop();
+    d.categories.splice(4, 0, other);
     d.categories.forEach((c, i) => (c.displayOrder = i + 1));
-    assertInvalid(d, /"unknown" must have the highest displayOrder/);
+    assertInvalid(d, /"other" must have the highest displayOrder/);
   });
 
-  test('Unknown that is not exclusive is rejected', () => {
+  test('inactive Other is rejected (it must always be selectable)', () => {
     const d = data();
-    byId(d, 'unknown').exclusive = false;
-    const errors = validateCategories(d, registry());
-    assert.ok(errors.some((e) => /"unknown" must have exclusive: true/.test(e)));
+    byId(d, 'other').active = false;
+    assertInvalid(d, /"other" must always be active/);
   });
 
-  test('a second exclusive category is rejected', () => {
+  test('Other with a different label is rejected', () => {
     const d = data();
-    byId(d, 'charity').exclusive = true;
-    const errors = validateCategories(d, registry());
-    assert.ok(errors.some((e) => /exactly one category must be exclusive \(found 2\)/.test(e)));
-    assert.ok(errors.some((e) => /only "unknown" may be exclusive \("charity"/.test(e)));
+    byId(d, 'other').label = 'Misc';
+    assertInvalid(d, /"other" must be labelled "Other"/);
   });
 
-  test('inactive Unknown is rejected (it must always be present)', () => {
+  test('Other with a different icon is rejected', () => {
     const d = data();
-    byId(d, 'unknown').active = false;
-    assertInvalid(d, /"unknown" must always be active/);
+    byId(d, 'other').icon = 'plane';
+    byId(d, 'travel').icon = 'circle-ellipsis';
+    assertInvalid(d, /"other" must use the icon "circle-ellipsis"/);
   });
 
-  test('Unknown with a different label is rejected', () => {
+  test('a dataset with only Other active is rejected', () => {
     const d = data();
-    byId(d, 'unknown').label = 'Not sure';
-    assertInvalid(d, /"unknown" must be labelled "Unknown"/);
-  });
-
-  test('Unknown with a non-question-mark icon is rejected', () => {
-    const d = data();
-    byId(d, 'unknown').icon = 'receipt';
-    byId(d, 'bills').icon = 'circle-question-mark';
-    assertInvalid(d, /"unknown" must use the neutral question-mark icon/);
-  });
-
-  test('a dataset with only Unknown active is rejected', () => {
-    const d = data();
-    for (const c of d.categories) if (c.id !== 'unknown') c.active = false;
-    assertInvalid(d, /at least one active, non-exclusive category is required/);
+    for (const c of d.categories) if (c.id !== 'other') c.active = false;
+    assertInvalid(d, /at least one active category besides "other" is required/);
   });
 });
 
 describe('CLI', () => {
   test('exits 1 and lists errors for an invalid file', () => {
-    // Write a broken copy to a temp dir; the real data file is never touched.
-    const dir = mkdtempSync(join(tmpdir(), 'categories-test-'));
-    try {
-      const broken = data();
-      broken.categories = broken.categories.filter((c) => c.id !== 'unknown');
-      const path = join(dir, 'categories.json');
-      writeFileSync(path, JSON.stringify(broken));
-      const r = spawnSync(process.execPath, [resolve(root, 'scripts/validate-categories.mjs'), '--data', path], {
-        encoding: 'utf8',
-      });
-      assert.equal(r.status, 1);
-      assert.match(r.stderr, /categories: \d+ error\(s\)/);
-      assert.match(r.stderr, /an "unknown" category is required/);
-    } finally {
-      rmSync(dir, { recursive: true, force: true });
-    }
+    const broken = data();
+    broken.categories = broken.categories.filter((c) => c.id !== 'other');
+    const r = runCliOn(broken);
+    assert.equal(r.status, 1);
+    assert.match(r.stderr, /categories: \d+ error\(s\)/);
+    assert.match(r.stderr, /an "other" category is required/);
   });
 
   test('exits 1 for malformed JSON', () => {
-    const dir = mkdtempSync(join(tmpdir(), 'categories-test-'));
-    try {
-      const path = join(dir, 'categories.json');
-      writeFileSync(path, '{ "categories": [ ');
-      const r = spawnSync(process.execPath, [resolve(root, 'scripts/validate-categories.mjs'), '--data', path], {
-        encoding: 'utf8',
-      });
-      assert.equal(r.status, 1);
-      assert.match(r.stderr, /could not read data/);
-    } finally {
-      rmSync(dir, { recursive: true, force: true });
-    }
+    const r = runCliOn('{ "categories": [ ');
+    assert.equal(r.status, 1);
+    assert.match(r.stderr, /could not read data/);
   });
 });

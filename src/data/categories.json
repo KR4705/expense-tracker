@@ -1,7 +1,8 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "status": "provisional",
-  "note": "Initial category set for review. Every entry is provisional until the product owner approves the category list, labels, order and icons (Style Guide Appendix B, question 2). See src/data/README.md for open decisions.",
+  "note": "Category set after product-owner decisions of 24 October 2026. IDs approved; labels shortened to fit a 3-column tile at 320 px; Bills merged into Home; Unknown removed and replaced by Other. Entries marked provisional (and the order) still need confirmation — see src/data/README.md.",
+  "orderBasis": "Largest expected spend first, ranked by share of urban household spending in MoSPI's Household Consumption Expenditure Survey (HCES) 2023-24. Categories with no matching survey line follow; Other is always last. Mapping in src/data/README.md.",
   "categories": [
     {
       "id": "food",
@@ -9,59 +10,53 @@
       "icon": "utensils",
       "displayOrder": 1,
       "active": true,
-      "exclusive": false,
-      "status": "provisional",
+      "status": "approved",
       "description": "Groceries, restaurants, cafés, food delivery."
     },
     {
       "id": "shopping",
-      "label": "Shopping",
+      "label": "Shop",
       "icon": "shopping-bag",
       "displayOrder": 2,
       "active": true,
-      "exclusive": false,
-      "status": "provisional",
-      "description": "Clothing, electronics, household items and other purchases."
-    },
-    {
-      "id": "transport",
-      "label": "Transport",
-      "icon": "car",
-      "displayOrder": 3,
-      "active": true,
-      "exclusive": false,
-      "status": "provisional",
-      "description": "Day-to-day travel: fuel, cabs, parking, public transport."
+      "status": "approved",
+      "description": "Clothing, footwear, electronics, appliances, household items and other purchases."
     },
     {
       "id": "housing",
-      "label": "Housing",
+      "label": "Home",
       "icon": "house",
+      "displayOrder": 3,
+      "active": true,
+      "status": "provisional",
+      "description": "Rent, maintenance and repairs, plus household bills: electricity, gas, water, phone, internet and subscriptions."
+    },
+    {
+      "id": "transport",
+      "label": "Transit",
+      "icon": "car",
       "displayOrder": 4,
       "active": true,
-      "exclusive": false,
       "status": "provisional",
-      "description": "Rent, maintenance, repairs and home services."
+      "description": "Day-to-day travel: fuel, cabs, autos, parking, public transport."
     },
     {
       "id": "entertainment",
-      "label": "Entertainment",
+      "label": "Fun",
       "icon": "clapperboard",
       "displayOrder": 5,
       "active": true,
-      "exclusive": false,
-      "status": "provisional",
+      "status": "approved",
       "description": "Films, events, streaming, hobbies, outings."
     },
     {
       "id": "healthcare",
-      "label": "Healthcare",
+      "label": "Health",
       "icon": "heart-pulse",
       "displayOrder": 6,
       "active": true,
-      "exclusive": false,
-      "status": "provisional",
-      "description": "Doctors, medicines, tests, insurance premiums for health."
+      "status": "approved",
+      "description": "Doctors, medicines, tests, hospital bills, health insurance."
     },
     {
       "id": "travel",
@@ -69,9 +64,8 @@
       "icon": "plane",
       "displayOrder": 7,
       "active": true,
-      "exclusive": false,
-      "status": "provisional",
-      "description": "Trips away from home: flights, hotels, holiday spending."
+      "status": "approved",
+      "description": "Trips away from home: flights, trains, hotels, holiday spending."
     },
     {
       "id": "charity",
@@ -79,29 +73,17 @@
       "icon": "hand-heart",
       "displayOrder": 8,
       "active": true,
-      "exclusive": false,
-      "status": "provisional",
+      "status": "approved",
       "description": "Donations and giving."
     },
     {
-      "id": "bills",
-      "label": "Bills",
-      "icon": "receipt",
+      "id": "other",
+      "label": "Other",
+      "icon": "circle-ellipsis",
       "displayOrder": 9,
       "active": true,
-      "exclusive": false,
       "status": "provisional",
-      "description": "Recurring utilities and services: electricity, phone, internet, subscriptions."
-    },
-    {
-      "id": "unknown",
-      "label": "Unknown",
-      "icon": "circle-question-mark",
-      "displayOrder": 10,
-      "active": true,
-      "exclusive": true,
-      "status": "provisional",
-      "description": "The user is not sure what the expense was for. Always last; mutually exclusive with every other category (SG-26)."
+      "description": "Anything that doesn't fit the categories above, or when the user isn't sure. Always last; combines freely with other categories."
     }
   ]
 }
