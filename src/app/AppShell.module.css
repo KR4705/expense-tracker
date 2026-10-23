@@ -1,0 +1,25 @@
+/*
+ * App frame (SG-39 Mobile-First Layout Frame).
+ * Designed at 360 × 640 first; no horizontal scroll down to 320 px.
+ * Safe-area insets are added on top of the token gutters/offsets so content
+ * never sits under a notch, rounded corner or home indicator.
+ */
+.shell {
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: var(--color-background-app);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: var(--layout-screen-max-content-width);
+  min-width: 0;
+  padding-top: calc(var(--layout-section-gap) + env(safe-area-inset-top, 0px));
+  padding-right: calc(var(--layout-screen-gutter) + env(safe-area-inset-right, 0px));
+  padding-bottom: calc(var(--layout-screen-bottom-action-offset) + env(safe-area-inset-bottom, 0px));
+  padding-left: calc(var(--layout-screen-gutter) + env(safe-area-inset-left, 0px));
+}
