@@ -1,6 +1,6 @@
 # Design Reference Catalog
 
-**Version:** 0.5 | **Updated:** 23 October 2026  
+**Version:** 0.6 | **Updated:** 24 October 2026  
 **Status:** Reference roles approved; individual screenshots remain candidate evidence.
 
 ## Purpose
@@ -41,7 +41,7 @@ A pass requires at least one complete component-to-rule chain. Screenshots provi
 ## Reference status
 
 - Design roles: approved.
-- Exact screen/URL mapping: [Screen References](SCREEN_REFERENCES.md).
-- Screenshot images stored in repository: none; external links only.
+- Exact screen/URL mapping and attachment reconciliation: [Screen References](SCREEN_REFERENCES.md).
+- Screenshot images stored in repository: none. Project Context contains uploaded images; REF-G01 has been confirmed by the user to be JPEG, and REF-G02 has been replaced in Project Context. The new REF-G02 file identity and visual content still require verification.
 - Design tokens and component specifications: not yet authored.
 - Use of copyrighted screenshots: limited to linked research sources unless reuse permissions are established.
