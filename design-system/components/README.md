@@ -12,7 +12,7 @@ These specifications describe appearance and behavior only. They contain no appl
 |---|---|---|---|
 | PrimaryActionButton | The one forward action on each entry screen | REF-U01 | [PrimaryActionButton.md](PrimaryActionButton.md) |
 | CategoryTile | One selectable category (checkbox behavior) | REF-P01 | [CategoryTile.md](CategoryTile.md) |
-| CategoryGrid | Category layout, multi-select set, Unknown exclusivity | REF-P01, REF-G01 | [CategoryGrid.md](CategoryGrid.md) |
+| CategoryGrid | Category layout, multi-select set, Unknown exclusivity | REF-P01 | [CategoryGrid.md](CategoryGrid.md) |
 | ExpenseProgressIndicator | Step position and back navigation | REF-D01 | [ExpenseProgressIndicator.md](ExpenseProgressIndicator.md) |
 | AmountInput | Fast, accurate rupee entry | REF-G01, REF-G02 | [AmountInput.md](AmountInput.md) |
 | SpendingSummaryCard | Headline spending total for the period | REF-G01 | [SpendingSummaryCard.md](SpendingSummaryCard.md) |
