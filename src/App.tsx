@@ -1,10 +1,10 @@
 import { AppShell } from './app/AppShell.tsx';
-import { PlaceholderScreen } from './app/PlaceholderScreen.tsx';
+import { CategorySelectionPage } from './pages/CategorySelectionPage.tsx';
 
 export function App() {
   return (
     <AppShell>
-      <PlaceholderScreen />
+      <CategorySelectionPage />
     </AppShell>
   );
 }

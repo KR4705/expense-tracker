@@ -10,7 +10,9 @@
     "tokens": "node scripts/build-tokens.mjs",
     "tokens:validate": "node scripts/build-tokens.mjs --check",
     "categories:validate": "node scripts/validate-categories.mjs",
-    "test": "node --test tests/*.test.mjs",
+    "test": "npm run test:data && npm run test:ui",
+    "test:data": "node --test tests/*.test.mjs",
+    "test:ui": "vitest run",
     "dev": "npm run tokens && vite",
     "typecheck": "npm run tokens && tsc -b",
     "validate": "npm run tokens:validate && npm run categories:validate && npm test && npm run typecheck",
@@ -19,15 +21,21 @@
   },
   "dependencies": {
     "@fontsource/inter": "^5.3.0",
+    "lucide-react": "^1.61.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
     "@types/node": "^26.6.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
+    "jsdom": "^29.1.1",
     "typescript": "^7.0.2",
-    "vite": "^8.3.5"
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
   }
 }

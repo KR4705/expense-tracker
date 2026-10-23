@@ -1,0 +1,31 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--layout-section-gap);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* Heading 1 — step question (SG-13), primary text. */
+.heading {
+  color: var(--color-text-primary);
+  font-family: var(--typography-heading-1-font-family);
+  font-size: var(--typography-heading-1-font-size);
+  font-weight: var(--typography-heading-1-font-weight);
+  line-height: var(--typography-heading-1-line-height);
+  letter-spacing: var(--typography-heading-1-letter-spacing);
+}
+
+/* Helper: body text, secondary colour (CategoryGrid §3, §9). */
+.helper {
+  color: var(--color-text-secondary);
+  font-family: var(--typography-body-default-font-family);
+  font-size: var(--typography-body-default-font-size);
+  font-weight: var(--typography-body-default-font-weight);
+  line-height: var(--typography-body-default-line-height);
+  letter-spacing: var(--typography-body-default-letter-spacing);
+}

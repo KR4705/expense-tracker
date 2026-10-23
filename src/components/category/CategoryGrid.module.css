@@ -1,0 +1,44 @@
+/*
+ * CategoryGrid — design-system/components/CategoryGrid.md v0.2, Style Guide v0.3.
+ */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--layout-section-gap);
+}
+
+/* SG-23: equal columns, 12 px gap. Phones 320–430 px: 3 columns. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--component-category-grid-columns), minmax(0, 1fr));
+  gap: var(--component-category-grid-gap);
+}
+
+/*
+ * SG-23: 4 columns only when the viewport is wider than 430 px (tiles are then
+ * ≥ 88 px, the component.categoryTile.minWidthForFourColumns token, inside the
+ * 480 px content cap). Media queries cannot read custom properties, so the
+ * 430 px breakpoint and the column count are written here; no token exists for them.
+ */
+@media (min-width: 431px) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* SG-43: large text — fall back to 2 columns (set by CategoryGrid when a label would exceed 2 lines). */
+.grid[data-large-text] {
+  grid-template-columns: repeat(var(--component-category-grid-columns-large-text), minmax(0, 1fr));
+}
+
+/* Selection summary: body text, secondary colour, polite live region. */
+.summary {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-family: var(--typography-body-default-font-family);
+  font-size: var(--typography-body-default-font-size);
+  font-weight: var(--typography-body-default-font-weight);
+  line-height: var(--typography-body-default-line-height);
+  letter-spacing: var(--typography-body-default-letter-spacing);
+}

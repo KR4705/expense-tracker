@@ -1,0 +1,148 @@
+/*
+ * CategoryTile — design-system/components/CategoryTile.md v0.2, Style Guide v0.3.
+ * Every value is a token custom property generated from design-system/tokens.json.
+ *
+ * Borders are drawn as an inset box-shadow so the 1 px → 2 px change on
+ * selection (SG-24) never shifts the tile's content.
+ */
+
+.tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--component-category-tile-content-gap);
+  min-width: 0;
+  min-height: var(--component-category-tile-min-height);
+  padding: var(--component-category-tile-padding);
+  border-radius: var(--component-category-tile-radius);
+  background-color: var(--component-category-tile-default-background);
+  box-shadow: inset 0 0 0 var(--component-category-tile-default-border-width) var(--component-category-tile-default-border);
+  /* G-6: no tile foreground token yet; shared primary text colour is the interim choice. */
+  color: var(--color-text-primary);
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--component-category-tile-selected-transition),
+    box-shadow var(--component-category-tile-selected-transition);
+}
+
+/* Visually hidden, still focusable and announced. */
+.input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Icon plate: 48 px circle; 28 px outline glyph, 2 px stroke (SG-22). */
+.plate {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--component-category-tile-icon-plate-size);
+  height: var(--component-category-tile-icon-plate-size);
+  border-radius: 50%;
+  background-color: var(--component-category-tile-default-icon-plate);
+  transition: background-color var(--component-category-tile-selected-transition);
+}
+
+.icon {
+  width: var(--component-category-tile-icon-size);
+  height: var(--component-category-tile-icon-size);
+  stroke-width: var(--size-icon-stroke-width);
+}
+
+/* Label: 15/20, centred, wraps to at most 2 lines; never shrinks or truncates (SG-27). */
+.label {
+  max-width: 100%;
+  text-align: center;
+  overflow-wrap: normal;
+  hyphens: manual;
+  font-family: var(--component-category-tile-default-typography-font-family);
+  font-size: var(--component-category-tile-default-typography-font-size);
+  font-weight: var(--component-category-tile-default-typography-font-weight);
+  line-height: var(--component-category-tile-default-typography-line-height);
+  letter-spacing: var(--component-category-tile-default-typography-letter-spacing);
+}
+
+/* Check badge: selected only, top-right; G-7 interim inset space.1 (4 px). */
+.badge {
+  position: absolute;
+  top: var(--space-1);
+  right: var(--space-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--component-category-tile-check-badge-size);
+  height: var(--component-category-tile-check-badge-size);
+  border-radius: 50%;
+  background-color: var(--component-category-tile-selected-indicator);
+  color: var(--component-category-tile-selected-on-indicator);
+}
+
+/* No token for the check glyph inside the 20 px badge; sized relative to the badge. */
+.badgeIcon {
+  width: 70%;
+  height: 70%;
+  stroke-width: var(--size-icon-stroke-width);
+}
+
+/* Pressed (momentary): subtle fill within 100 ms (SG-19). */
+.tile:not([data-disabled]):active {
+  background-color: var(--component-category-tile-pressed-background);
+  transition-duration: var(--motion-duration-press-feedback);
+}
+
+/* Selected: tint + 2 px accent border + white plate + semibold label + badge (SG-24). */
+.tile[data-selected] {
+  background-color: var(--component-category-tile-selected-background);
+  box-shadow: inset 0 0 0 var(--component-category-tile-selected-border-width) var(--component-category-tile-selected-border);
+}
+
+.tile[data-selected] .plate {
+  background-color: var(--component-category-tile-selected-icon-plate);
+}
+
+.tile[data-selected] .label {
+  font-weight: var(--component-category-tile-selected-typography-font-weight);
+}
+
+/*
+ * Focused (keyboard / switch): 2 px ring outside the tile.
+ * G-3: CategoryTile has no ring-offset token; the PrimaryActionButton offset
+ * (2 px) is reused as the spec's interim choice.
+ */
+.tile:has(.input:focus-visible) {
+  outline: var(--component-category-tile-focused-ring-width) solid var(--component-category-tile-focused-ring-color);
+  outline-offset: var(--component-primary-action-button-focused-ring-offset);
+}
+
+/* Disabled = inactive category (SG-45): visible in place, not selectable. */
+.tile[data-disabled] {
+  background-color: var(--component-category-tile-disabled-background);
+  box-shadow: inset 0 0 0 var(--component-category-tile-default-border-width) var(--component-category-tile-disabled-border);
+  color: var(--component-category-tile-disabled-foreground);
+  cursor: not-allowed;
+}
+
+.tile[data-disabled] .icon {
+  opacity: var(--component-category-tile-disabled-icon-opacity);
+}
+
+/* Reduced motion: instant state changes (SG-44). */
+@media (prefers-reduced-motion: reduce) {
+  .tile,
+  .plate {
+    transition: none;
+  }
+}
