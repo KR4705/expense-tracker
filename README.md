@@ -1,27 +1,37 @@
 # Expense Tracker
 
-A mobile-first, visually guided personal expense-tracking product for high-spending people who want less friction and more clarity.
+A mobile-first personal expense-tracking product focused on making spending visible without turning expense recording into financial administration.
 
-## Product principles
-- One obvious next action per step.
-- Large, unmistakable buttons and icon-backed choices.
-- Guided expense capture in approximately 3–4 interactions where feasible.
-- Multiple categories/tags per expense, including Unknown.
-- A straightforward financial dashboard.
+## Product overview
 
-## Design references
-- **PhonePe:** clear, mass-friendly icon and action patterns.
-- **Duolingo:** visible progress and encouraging feedback.
-- **Uber:** linear, focused decision flows.
-- **Groww:** readable dashboards and financial insights.
+The intended audience is financially unorganized high-net-worth individuals and high spenders. The product emphasizes fast capture, flexible categorization, and understandable insights.
 
-## Repository map
-- `docs/`: product vision and requirements.
-- `references/`: curated visual examples and source attribution.
-- `design-system/`: style guide, tokens, and reusable component specs.
-- `src/`: future frontend application code.
+The core experience aims to make a typical expense recordable in approximately three or four simple interactions:
+- A clear, guided sequence with one prominent next action.
+- Large, recognizable controls.
+- Icon-supported category tiles that permit multiple tags, including Unknown.
+- A readable financial summary that does not double-count transactions assigned to multiple categories.
 
-## Status
-**Step 1: Gathering visual references.** No screenshots or final design decisions are committed yet.
+These are product intentions, not yet validated usability outcomes.
 
-> The full product vision is stored in Claude Project Context. The repository version is intentionally a placeholder until publication is approved.
+## Documentation
+
+| Document | Purpose |
+|---|---|
+| [Product vision](docs/PRODUCT_VISION.md) | Problem, audience, product principles and proposed MVP |
+| [Design reference catalog](references/REFERENCE_CATALOG.md) | Inspiration, design observations, original sources and screenshot targets |
+| `design-system/` | Reserved for the style guide, tokens and component specifications |
+| `src/` | Reserved for application source code |
+
+## Design reference directions
+
+- **PhonePe:** Equal-weight, unmistakable visual choices.
+- **Duolingo:** Clear current, completed and upcoming states.
+- **Uber:** One dominant forward action in a guided sequence.
+- **Groww mobile:** Readable financial summaries, charts and breakdowns.
+
+## Current stage
+
+**Design discovery — Step 1.** Reference roles have been agreed; screenshot selection, style-guide rules, tokens, and component specifications remain incomplete. No frontend framework or implementation architecture has been selected.
+
+This repository documents the product and design process as decisions develop.
