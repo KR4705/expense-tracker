@@ -1,0 +1,89 @@
+{
+  "version": "1.0.0",
+  "status": "approved",
+  "note": "Initial MVP category set, approved by the product owner on 24 October 2026. Zero selected categories is valid and is saved as Uncategorized. See src/data/README.md.",
+  "orderBasis": "Approved by the product owner for the initial MVP, informed by urban household spending shares in MoSPI's HCES 2023-24. Other is always last. To be revisited once real user behavior is collected.",
+  "categories": [
+    {
+      "id": "food",
+      "label": "Food",
+      "icon": "utensils",
+      "displayOrder": 1,
+      "active": true,
+      "status": "approved",
+      "description": "Groceries, restaurants, cafés, food delivery."
+    },
+    {
+      "id": "housing",
+      "label": "Home",
+      "icon": "house",
+      "displayOrder": 2,
+      "active": true,
+      "status": "approved",
+      "description": "Rent, maintenance and repairs, plus household bills: electricity, gas, water, phone, internet and subscriptions."
+    },
+    {
+      "id": "shopping",
+      "label": "Shop",
+      "icon": "shopping-bag",
+      "displayOrder": 3,
+      "active": true,
+      "status": "approved",
+      "description": "Clothing, footwear, electronics, appliances, household items and other purchases."
+    },
+    {
+      "id": "transport",
+      "label": "Transit",
+      "icon": "car",
+      "displayOrder": 4,
+      "active": true,
+      "status": "approved",
+      "description": "Day-to-day travel: fuel, cabs, autos, parking, public transport."
+    },
+    {
+      "id": "healthcare",
+      "label": "Health",
+      "icon": "heart-pulse",
+      "displayOrder": 5,
+      "active": true,
+      "status": "approved",
+      "description": "Doctors, medicines, tests, hospital bills, health insurance."
+    },
+    {
+      "id": "entertainment",
+      "label": "Fun",
+      "icon": "clapperboard",
+      "displayOrder": 6,
+      "active": true,
+      "status": "approved",
+      "description": "Films, events, streaming, hobbies, outings."
+    },
+    {
+      "id": "travel",
+      "label": "Travel",
+      "icon": "plane",
+      "displayOrder": 7,
+      "active": true,
+      "status": "approved",
+      "description": "Trips away from home: flights, trains, hotels, holiday spending."
+    },
+    {
+      "id": "charity",
+      "label": "Charity",
+      "icon": "hand-heart",
+      "displayOrder": 8,
+      "active": true,
+      "status": "approved",
+      "description": "Donations and giving."
+    },
+    {
+      "id": "other",
+      "label": "Other",
+      "icon": "circle-ellipsis",
+      "displayOrder": 9,
+      "active": true,
+      "status": "approved",
+      "description": "Anything that doesn't fit the categories above. Always last; can be selected alongside other categories."
+    }
+  ]
+}

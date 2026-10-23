@@ -9,9 +9,11 @@
   "scripts": {
     "tokens": "node scripts/build-tokens.mjs",
     "tokens:validate": "node scripts/build-tokens.mjs --check",
+    "categories:validate": "node scripts/validate-categories.mjs",
+    "test": "node --test tests/*.test.mjs",
     "dev": "npm run tokens && vite",
     "typecheck": "npm run tokens && tsc -b",
-    "validate": "npm run tokens:validate && npm run typecheck",
+    "validate": "npm run tokens:validate && npm run categories:validate && npm test && npm run typecheck",
     "build": "npm run validate && vite build",
     "preview": "vite preview"
   },
