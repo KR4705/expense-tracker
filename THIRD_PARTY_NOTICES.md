@@ -12,4 +12,12 @@ This application bundles the following third-party assets.
 
 The font files are redistributed unmodified apart from Fontsource's subsetting. They are not sold on their own, and the Inter name is not used to promote this product.
 
+## Lucide
+
+- **What:** Category icons (`utensils`, `house`, `shopping-bag`, `car`, `heart-pulse`, `clapperboard`, `plane`, `hand-heart`, `circle-ellipsis`) and the selection check mark, bundled as React components; only the icons imported are included
+- **Source:** [`lucide-react`](https://www.npmjs.com/package/lucide-react), from [lucide.dev](https://lucide.dev)
+- **Copyright:** Copyright (c) 2026 Lucide Icons and Contributors
+- **Licence:** ISC License
+- **Full licence text:** [`public/licenses/Lucide-ISC.txt`](public/licenses/Lucide-ISC.txt), copied unchanged from the installed package and served with the built app at `/licenses/Lucide-ISC.txt`
+
 npm dependencies are covered by their own licences in their packages.

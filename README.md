@@ -37,7 +37,7 @@ These are product intentions, not yet validated usability outcomes.
 
 ## Current stage
 
-**Frontend foundation.** The style guide, tokens and component specifications are in place. The frontend is set up with Vite, React and TypeScript, and currently shows a placeholder screen inside the mobile-first app shell. The category dataset in `src/data/` is validated and approved for the initial MVP. The expense-entry flow, category selection UI and dashboard have not been built yet.
+**Category selection page.** The style guide, tokens, component specifications and approved category dataset are in place. The app shows a standalone **Choose categories** page built from `src/data/categories.json` with the CategoryTile and CategoryGrid components: multi-select, Other combinable with any category, inactive categories visible but disabled, and zero selections allowed. The rest of the expense-entry flow (amount, progress indicator, review and save) and the dashboard have not been built yet.
 
 This repository documents the product and design process as decisions develop.
 
@@ -60,7 +60,9 @@ To check the app at mobile size, open your browser's device toolbar and start at
 | `npm run tokens` | Validates `design-system/tokens.json` and regenerates `src/styles/tokens.css`. |
 | `npm run tokens:validate` | Validates the tokens only; writes nothing. |
 | `npm run categories:validate` | Validates `src/data/categories.json` against the icon registry and the category rules (see [src/data/README.md](src/data/README.md)). |
-| `npm test` | Runs the test suite in `tests/` with Node's built-in test runner. |
+| `npm test` | Runs both test suites: `test:data` then `test:ui`. |
+| `npm run test:data` | Category data validator tests in `tests/` (Node's built-in test runner). |
+| `npm run test:ui` | Component and page tests in `src/**/*.test.tsx` (Vitest, Testing Library, jsdom). |
 | `npm run typecheck` | Generates tokens, then runs the TypeScript compiler (`tsc -b`). |
 | `npm run validate` | Token validation, category validation, tests and type checking. |
 | `npm run build` | `validate`, then a production build into `dist/`. |
@@ -79,7 +81,9 @@ Validation fails the build if an alias points at a missing token, aliases form a
 
 `src/styles/tokens.css` is generated and git-ignored; never edit it by hand. Components use `var(--…)` token properties only. To change a value, change `tokens.json` (and the Style Guide it traces to) through review.
 
-### Fonts and licences
+### Fonts, icons and licences
+
+Category icons come from [Lucide](https://lucide.dev) via the `lucide-react` package (ISC licence; full text at `public/licenses/Lucide-ISC.txt`). Only the icons listed in `src/data/category-icons.json` are imported, through `src/components/category/categoryIcons.ts`.
 
 The UI font is [Inter](https://github.com/rsms/inter), installed from the [`@fontsource/inter`](https://fontsource.org/fonts/inter) npm package and bundled with the app (no third-party font CDN). Only weights 400, 500 and 600 (the weights in `tokens.json`) and the latin and latin-ext subsets are loaded; latin-ext contains the ₹ glyph.
 
