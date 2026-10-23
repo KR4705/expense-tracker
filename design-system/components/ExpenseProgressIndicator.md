@@ -1,7 +1,7 @@
 # ExpenseProgressIndicator — Component Specification
 
 **Version:** 0.1 (draft) | **Date:** 24 October 2026
-**Sources:** `docs/PRODUCT_VISION.md` v1.1 · `design-system/STYLE_GUIDE.md` v0.1 · `design-system/tokens.json` v0.1.0 · `references/REFERENCE_CATALOG.md` v0.6
+**Sources:** `docs/PRODUCT_VISION.md` v1.1 · `design-system/STYLE_GUIDE.md` v0.2 · `design-system/tokens.json` v0.1.0 · `references/REFERENCE_CATALOG.md` v0.6
 **Primary references:** REF-D01 (Duolingo — completed, current and upcoming states), REF-U01 / REF-G02 (top-left back control)
 **Status:** Implementation-ready specification. No code.
 
@@ -62,7 +62,7 @@ There are always **three** segments. The optional details step does not add a se
 
 All segments: `component.progressIndicator.radius` (rounded ends), separated by `component.progressIndicator.segmentGap`.
 
-**No check mark (decision D-2, approved).** Completed segments carry no ✓: a check cannot be drawn legibly inside a 4 px segment. Completed, current and upcoming remain distinguishable through lightness (grayscale-distinct), height (current is taller), position relative to the current step, the caption, and each segment's accessible state. SG-29's wording still mentions a ✓; a clarification is recommended for a separate Style Guide PR (README §8).
+**No check mark (decision D-2, approved).** Completed segments carry no ✓: a check cannot be drawn legibly inside a 4 px segment. Completed, current and upcoming remain distinguishable through lightness (grayscale-distinct), height (current is taller), position relative to the current step, the caption, and each segment's accessible state. SG-29 was clarified accordingly in Style Guide v0.2.
 
 ### 5.2 Other states
 
@@ -190,6 +190,6 @@ REF-D01 (current level shown in the unit color, distinct from completed and lock
 
 *(⟶ reads "is the source of". In the token tables above, → means "aliases".)*
 
-### Contradiction resolved in this spec (Style Guide clarification pending)
+### Contradiction resolved (SG-29 clarified in Style Guide v0.2)
 
-- **C-2 — Check mark on a 4 px segment.** SG-29 specifies "filled near-black segment with a small ✓", but the approved segment height token is 4 px (`component.progressIndicator.segmentHeight`), too small to hold a legible check. **Decision D-2 (approved): the ✓ is removed from compact segments**; SG-42 is met through lightness, height, position, caption and accessible state. Recommended SG-29 clarification: README §8.
+- **C-2 — Check mark on a 4 px segment.** SG-29 specifies "filled near-black segment with a small ✓", but the approved segment height token is 4 px (`component.progressIndicator.segmentHeight`), too small to hold a legible check. **Decision D-2 (approved): the ✓ is removed from compact segments**; SG-42 is met through lightness, height, position, caption and accessible state. SG-29 was clarified to this wording in Style Guide v0.2.

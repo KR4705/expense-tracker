@@ -1,7 +1,7 @@
 # PrimaryActionButton — Component Specification
 
 **Version:** 0.2 (draft) | **Date:** 24 October 2026
-**Sources:** `docs/PRODUCT_VISION.md` v1.1 · `design-system/STYLE_GUIDE.md` v0.1 · `design-system/tokens.json` v0.1.0 · `references/REFERENCE_CATALOG.md` v0.6
+**Sources:** `docs/PRODUCT_VISION.md` v1.1 · `design-system/STYLE_GUIDE.md` v0.2 · `design-system/tokens.json` v0.1.0 · `references/REFERENCE_CATALOG.md` v0.6
 **Primary reference:** REF-U01 (Uber — one unmistakable, strongly contrasted forward button)
 **Status:** Implementation-ready specification. No code.
 
@@ -188,7 +188,7 @@ The button has no error appearance of its own. Errors belong to the field or scr
 ## 11. Acceptance criteria
 
 1. Every expense-entry screen renders exactly one PrimaryActionButton, and no other control uses `color.action.primary.background` as a fill. *(SG-01, SG-07)*
-2. On Steps 1, 2 and 3, the button is docked to the bottom of the available viewport with the same offset (`layout.screen.bottomActionOffset` + safe-area inset), and is never scrolled off screen or hidden — verified in portrait and landscape, with the keyboard open and closed, on a device with a home indicator/gesture bar, and on a short viewport (e.g. 320 × 568). *(SG-18)* — Flexible bottom docking approved (D-1). SG-18's own acceptance criterion still describes an identical top edge; the amendment is recommended for a separate Style Guide PR (README §8).
+2. On Steps 1, 2 and 3, the button is docked to the bottom of the available viewport with the same offset (`layout.screen.bottomActionOffset` + safe-area inset), and is never scrolled off screen or hidden — verified in portrait and landscape, with the keyboard open and closed, on a device with a home indicator/gesture bar, and on a short viewport (e.g. 320 × 568). *(SG-18)* — Flexible bottom docking approved (D-1); SG-18's acceptance criterion was amended to match in Style Guide v0.2.
 3. Height is ≥ 56 px at default text size; width equals the content column minus gutters. *(SG-18)*
 4. Label contrast ≥ 7:1 in default and pressed states. *(SG-07, SG-19)*
 5. Pressed state is visible within 100 ms of touch-down. *(SG-19)*

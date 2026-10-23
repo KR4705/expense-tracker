@@ -1,8 +1,8 @@
 # CategoryGrid — Component Specification
 
 **Version:** 0.1 (draft) | **Date:** 24 October 2026
-**Sources:** `docs/PRODUCT_VISION.md` v1.1 · `design-system/STYLE_GUIDE.md` v0.1 · `design-system/tokens.json` v0.1.0 · `references/REFERENCE_CATALOG.md` v0.6
-**Primary references:** REF-P01 (uniform icon + label grid), REF-G01 (2 × 2 grid of identical cards in "Select portfolio" sheet)
+**Sources:** `docs/PRODUCT_VISION.md` v1.1 · `design-system/STYLE_GUIDE.md` v0.2 · `design-system/tokens.json` v0.1.0 · `references/REFERENCE_CATALOG.md` v0.6
+**Primary reference:** REF-P01 (uniform icon + label grid)
 **Related:** contains [CategoryTile](CategoryTile.md); sits above [PrimaryActionButton](PrimaryActionButton.md) on Step 2.
 **Status:** Implementation-ready specification. No code.
 
@@ -207,13 +207,13 @@ All tile appearance tokens are listed in [CategoryTile §9](CategoryTile.md#9-de
 | Primary never disabled here | — (behavioral) | SG-20 | — |
 | Selection preserved | — (behavioral) | SG-30, SG-32 | — |
 | Group label and announcements | — (behavioral) | SG-41 | — |
-| Equal-weight layout | — (behavioral) | SG-21 | REF-P01, REF-G01 |
+| Equal-weight layout | — (behavioral) | SG-21 | REF-P01 |
 
 **Complete chain example:**
 REF-P01 (uniform rows of identical icon + label choices) ⟶ **SG-23** Tile Dimensions and Grid ⟶ `space.3` ⟶ `component.categoryGrid.gap` ⟶ CategoryGrid gap between tiles 12 px.
 
 *(⟶ reads "is the source of". In the token tables above, → means "aliases".)*
 
-### Contradiction resolved in this spec (Style Guide clarification pending)
+### Contradiction resolved (SG-23 clarified in Style Guide v0.2)
 
-- **C-1 — 3 vs 4 columns at 420–430 px.** SG-23 says "3 columns on phones 360–430 px wide" and also "move to 4 columns only when each tile can still be ≥ 88 px wide". With 16 px gutters and 12 px gaps, four tiles reach 88 px at a viewport of 420 px, so the clauses conflict between 420 and 430 px. **Decision (approved): three columns across the documented phone range (320–430 px)**, subject to two constraints: tiles keep their 96 px minimum height and ≥ 48 px touch area, and if labels would exceed two lines (large text), the grid falls back to 2 columns (SG-43, trigger per D-3). Four columns only above 430 px with tiles ≥ 88 px. Recommended SG-23 clarification: README §8.
+- **C-1 — 3 vs 4 columns at 420–430 px.** SG-23 says "3 columns on phones 360–430 px wide" and also "move to 4 columns only when each tile can still be ≥ 88 px wide". With 16 px gutters and 12 px gaps, four tiles reach 88 px at a viewport of 420 px, so the clauses conflict between 420 and 430 px. **Decision (approved): three columns across the documented phone range (320–430 px)**, subject to two constraints: tiles keep their 96 px minimum height and ≥ 48 px touch area, and if labels would exceed two lines (large text), the grid falls back to 2 columns (SG-43, trigger per D-3). Four columns only above 430 px with tiles ≥ 88 px. SG-23 was clarified to this wording in Style Guide v0.2.

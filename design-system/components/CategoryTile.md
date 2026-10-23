@@ -1,7 +1,7 @@
 # CategoryTile — Component Specification
 
 **Version:** 0.1 (draft) | **Date:** 24 October 2026
-**Sources:** `docs/PRODUCT_VISION.md` v1.1 · `design-system/STYLE_GUIDE.md` v0.1 · `design-system/tokens.json` v0.1.0 · `references/REFERENCE_CATALOG.md` v0.6
+**Sources:** `docs/PRODUCT_VISION.md` v1.1 · `design-system/STYLE_GUIDE.md` v0.2 · `design-system/tokens.json` v0.1.0 · `references/REFERENCE_CATALOG.md` v0.6
 **Primary references:** REF-P01 (PhonePe — equal-weight icon + label choices), REF-U01 (tinted selected row), REF-D01 (check icon as a non-color state cue)
 **Related:** [CategoryGrid](CategoryGrid.md) owns layout, multi-select bookkeeping and Unknown exclusivity across tiles.
 **Status:** Implementation-ready specification. No code.
