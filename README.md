@@ -19,7 +19,8 @@ These are product intentions, not yet validated usability outcomes.
 | Document | Purpose |
 |---|---|
 | [Product vision](docs/PRODUCT_VISION.md) | Problem, audience, product principles and proposed MVP |
-| [Design reference catalog](references/REFERENCE_CATALOG.md) | Inspiration, design observations, original sources and screenshot targets |
+| [Design reference catalog](references/REFERENCE_CATALOG.md) | Approved inspiration roles and design observations |
+| [Screen references](references/SCREEN_REFERENCES.md) | Exact external image sources and current attachment status |
 | `design-system/` | Reserved for the style guide, tokens and component specifications |
 | `src/` | Reserved for application source code |
 
@@ -32,6 +33,6 @@ These are product intentions, not yet validated usability outcomes.
 
 ## Current stage
 
-**Design discovery — Step 1.** Reference roles have been agreed; screenshot selection, style-guide rules, tokens, and component specifications remain incomplete. No frontend framework or implementation architecture has been selected.
+**Design discovery — Step 1.** Reference roles have been agreed; verification of uploaded screenshots, style-guide rules, tokens, and component specifications remain incomplete. No frontend framework or implementation architecture has been selected.
 
 This repository documents the product and design process as decisions develop.
