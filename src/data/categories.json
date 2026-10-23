@@ -1,0 +1,107 @@
+{
+  "version": "0.1.0",
+  "status": "provisional",
+  "note": "Initial category set for review. Every entry is provisional until the product owner approves the category list, labels, order and icons (Style Guide Appendix B, question 2). See src/data/README.md for open decisions.",
+  "categories": [
+    {
+      "id": "food",
+      "label": "Food",
+      "icon": "utensils",
+      "displayOrder": 1,
+      "active": true,
+      "exclusive": false,
+      "status": "provisional",
+      "description": "Groceries, restaurants, cafés, food delivery."
+    },
+    {
+      "id": "shopping",
+      "label": "Shopping",
+      "icon": "shopping-bag",
+      "displayOrder": 2,
+      "active": true,
+      "exclusive": false,
+      "status": "provisional",
+      "description": "Clothing, electronics, household items and other purchases."
+    },
+    {
+      "id": "transport",
+      "label": "Transport",
+      "icon": "car",
+      "displayOrder": 3,
+      "active": true,
+      "exclusive": false,
+      "status": "provisional",
+      "description": "Day-to-day travel: fuel, cabs, parking, public transport."
+    },
+    {
+      "id": "housing",
+      "label": "Housing",
+      "icon": "house",
+      "displayOrder": 4,
+      "active": true,
+      "exclusive": false,
+      "status": "provisional",
+      "description": "Rent, maintenance, repairs and home services."
+    },
+    {
+      "id": "entertainment",
+      "label": "Entertainment",
+      "icon": "clapperboard",
+      "displayOrder": 5,
+      "active": true,
+      "exclusive": false,
+      "status": "provisional",
+      "description": "Films, events, streaming, hobbies, outings."
+    },
+    {
+      "id": "healthcare",
+      "label": "Healthcare",
+      "icon": "heart-pulse",
+      "displayOrder": 6,
+      "active": true,
+      "exclusive": false,
+      "status": "provisional",
+      "description": "Doctors, medicines, tests, insurance premiums for health."
+    },
+    {
+      "id": "travel",
+      "label": "Travel",
+      "icon": "plane",
+      "displayOrder": 7,
+      "active": true,
+      "exclusive": false,
+      "status": "provisional",
+      "description": "Trips away from home: flights, hotels, holiday spending."
+    },
+    {
+      "id": "charity",
+      "label": "Charity",
+      "icon": "hand-heart",
+      "displayOrder": 8,
+      "active": true,
+      "exclusive": false,
+      "status": "provisional",
+      "description": "Donations and giving."
+    },
+    {
+      "id": "bills",
+      "label": "Bills",
+      "icon": "receipt",
+      "displayOrder": 9,
+      "active": true,
+      "exclusive": false,
+      "status": "provisional",
+      "description": "Recurring utilities and services: electricity, phone, internet, subscriptions."
+    },
+    {
+      "id": "unknown",
+      "label": "Unknown",
+      "icon": "circle-question-mark",
+      "displayOrder": 10,
+      "active": true,
+      "exclusive": true,
+      "status": "provisional",
+      "description": "The user is not sure what the expense was for. Always last; mutually exclusive with every other category (SG-26)."
+    }
+  ]
+}

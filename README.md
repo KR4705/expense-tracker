@@ -26,6 +26,7 @@ These are product intentions, not yet validated usability outcomes.
 | [Component specifications](design-system/components/README.md) | Appearance and behavior of the seven MVP components |
 | `src/` | Application source code (React + TypeScript) |
 | `scripts/build-tokens.mjs` | Token-to-CSS-variable generator |
+| [Category data](src/data/README.md) | Provisional category list, icon registry, validation rules and open decisions |
 
 ## Design reference directions
 
@@ -36,7 +37,7 @@ These are product intentions, not yet validated usability outcomes.
 
 ## Current stage
 
-**Frontend foundation.** The style guide, tokens and component specifications are in place. The frontend is set up with Vite, React and TypeScript, and currently shows a placeholder screen inside the mobile-first app shell. The expense-entry flow, categories and dashboard have not been built yet.
+**Frontend foundation.** The style guide, tokens and component specifications are in place. The frontend is set up with Vite, React and TypeScript, and currently shows a placeholder screen inside the mobile-first app shell. A provisional category dataset with validation exists in `src/data/`, awaiting approval. The expense-entry flow, category selection UI and dashboard have not been built yet.
 
 This repository documents the product and design process as decisions develop.
 
@@ -58,8 +59,10 @@ To check the app at mobile size, open your browser's device toolbar and start at
 | `npm run dev` | Generates `src/styles/tokens.css`, then starts the Vite dev server. |
 | `npm run tokens` | Validates `design-system/tokens.json` and regenerates `src/styles/tokens.css`. |
 | `npm run tokens:validate` | Validates the tokens only; writes nothing. |
+| `npm run categories:validate` | Validates `src/data/categories.json` against the icon registry and the category rules (see [src/data/README.md](src/data/README.md)). |
+| `npm test` | Runs the test suite in `tests/` with Node's built-in test runner. |
 | `npm run typecheck` | Generates tokens, then runs the TypeScript compiler (`tsc -b`). |
-| `npm run validate` | Token validation plus type checking. |
+| `npm run validate` | Token validation, category validation, tests and type checking. |
 | `npm run build` | `validate`, then a production build into `dist/`. |
 | `npm run preview` | Serves the production build locally. |
 

@@ -1,0 +1,26 @@
+{
+  "version": "0.1.0",
+  "status": "provisional",
+  "iconSet": {
+    "name": "Lucide",
+    "package": "lucide-static",
+    "verifiedAgainstVersion": "1.61.0",
+    "licence": "ISC",
+    "url": "https://lucide.dev",
+    "status": "provisional",
+    "note": "Proposed because it matches the Style Guide's icon proposal (outline style, 2 px stroke, rounded joins, 24 px grid). Not approved and not installed. Identifiers below are Lucide's canonical icon names, checked to exist in lucide-static 1.61.0. If a different set is chosen, only this registry and the category 'icon' values change."
+  },
+  "unknownIcon": "circle-question-mark",
+  "icons": [
+    { "id": "utensils", "description": "Fork and knife" },
+    { "id": "shopping-bag", "description": "Shopping bag" },
+    { "id": "car", "description": "Car" },
+    { "id": "house", "description": "House" },
+    { "id": "clapperboard", "description": "Film clapperboard" },
+    { "id": "heart-pulse", "description": "Heart with pulse line" },
+    { "id": "plane", "description": "Aeroplane" },
+    { "id": "hand-heart", "description": "Hand holding a heart" },
+    { "id": "receipt", "description": "Receipt" },
+    { "id": "circle-question-mark", "description": "Question mark in a circle (neutral; reserved for Unknown, SG-26)" }
+  ]
+}
