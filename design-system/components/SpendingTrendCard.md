@@ -1,7 +1,7 @@
 # SpendingTrendCard — Component Specification
 
 **Version:** 0.1 (draft) | **Date:** 24 October 2026
-**Sources:** `docs/PRODUCT_VISION.md` v1.1 · `design-system/STYLE_GUIDE.md` v0.1 · `design-system/tokens.json` v0.1.0 · `references/REFERENCE_CATALOG.md` v0.6
+**Sources:** `docs/PRODUCT_VISION.md` v1.1 · `design-system/STYLE_GUIDE.md` v0.2 · `design-system/tokens.json` v0.1.0 · `references/REFERENCE_CATALOG.md` v0.6
 **Primary reference:** REF-G02 (Groww — values above a simple line chart, solid vs dotted series, time-range pill row)
 **Status:** Implementation-ready specification. No code.
 

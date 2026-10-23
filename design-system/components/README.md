@@ -1,8 +1,8 @@
 # Component Specifications — Expense Tracker
 
-**Version:** 0.2 (for review in PR) | **Date:** 24 October 2026
+**Version:** 0.3 | **Date:** 24 October 2026
 **Design-system stage:** Step 3 — Component Specifications
-**Sources (all from `main`):** `docs/PRODUCT_VISION.md` v1.1 · `design-system/STYLE_GUIDE.md` v0.1 · `design-system/tokens.json` v0.1.0 · `references/REFERENCE_CATALOG.md` v0.6
+**Sources (all from `main`):** `docs/PRODUCT_VISION.md` v1.1 · `design-system/STYLE_GUIDE.md` v0.2 · `design-system/tokens.json` v0.1.0 · `references/REFERENCE_CATALOG.md` v0.6
 
 These specifications describe appearance and behavior only. They contain no application code. Neither the Style Guide nor `tokens.json` was modified to write them; gaps and contradictions are reported below for separate decision.
 
@@ -124,6 +124,7 @@ PAB = PrimaryActionButton · Tile = CategoryTile · Grid = CategoryGrid · Prog 
 | Proposed token values used | Marked *(proposal)* wherever shown |
 | Style Guide / tokens modified | No |
 | Re-run after review decisions D-1, D-2, C-1, D-7, D-11, D-13, G-9, G-10 | Pass — 0 errors across all seven specs and this README |
+| Re-run against STYLE_GUIDE.md v0.2 (SG-18, SG-23, SG-29 amended) | Pass — 0 errors; no rule IDs changed |
 
 **Accessibility status.** Token-level contrast checks passed (`tokens.json` → `accessibilityStatus`). **Component-level accessibility is unverified** for all seven components until built and tested with VoiceOver, TalkBack, keyboard/switch access, 200 % text and reduced motion.
 
@@ -148,15 +149,15 @@ Shared semantic or foundation tokens are reused as the interim choice. `tokens.j
 
 | ID | Conflict | Status | Position in specs |
 |---|---|---|---|
-| C-1 | SG-23: "3 columns on 360–430 px" vs "4 columns when tiles ≥ 88 px" — four 88 px tiles fit from 420 px. | **Resolved in specs (approved)**; Style Guide clarification pending (§8) | 3 columns across the phone range (320–430 px), subject to the 96 px minimum tile height, ≥ 48 px touch area and the 2-column large-text fallback; 4 columns only above 430 px with tiles ≥ 88 px. |
-| C-2 | SG-29 asks for a small ✓ on completed segments; approved segment height is 4 px. | **Resolved in specs (approved, D-2)**; Style Guide clarification pending (§8) | ✓ removed; lightness, height, position, caption and accessible state distinguish completed / current / upcoming. |
+| C-1 | SG-23: "3 columns on 360–430 px" vs "4 columns when tiles ≥ 88 px" — four 88 px tiles fit from 420 px. | **Resolved** — specs (approved) and SG-23 clarified in Style Guide v0.2 | 3 columns across the phone range (320–430 px), subject to the 96 px minimum tile height, ≥ 48 px touch area and the 2-column large-text fallback; 4 columns only above 430 px with tiles ≥ 88 px. |
+| C-2 | SG-29 asks for a small ✓ on completed segments; approved segment height is 4 px. | **Resolved** — specs (approved, D-2) and SG-29 clarified in Style Guide v0.2 | ✓ removed; lightness, height, position, caption and accessible state distinguish completed / current / upcoming. |
 
 ## 8. Decisions
 
 | ID | Spec | Decision | Status | Recommendation / outcome |
 |---|---|---|---|---|
-| D-1 | PrimaryActionButton | Flexible bottom docking (safe areas, keyboard, orientation, viewport height) instead of an identical top edge. | **Approved** | Applied. SG-18 amendment recommended below. |
-| D-2 | ExpenseProgressIndicator | Remove ✓ from compact segments. | **Approved** | Applied. SG-29 clarification recommended below. |
+| D-1 | PrimaryActionButton | Flexible bottom docking (safe areas, keyboard, orientation, viewport height) instead of an identical top edge. | **Approved** | Applied in specs; SG-18 amended in Style Guide v0.2. |
+| D-2 | ExpenseProgressIndicator | Remove ✓ from compact segments. | **Approved** | Applied in specs; SG-29 clarified in Style Guide v0.2. |
 | D-3 | CategoryGrid | Trigger for the 2-column large-text layout. | Open | Switch when any label would exceed 2 lines at 3 columns. |
 | D-4 | CategoryGrid | Undo after Unknown clears other selections. | Open | No undo in MVP; announcement + summary suffice. Revisit after testing. |
 | D-5 | CategoryGrid | Include a Skip text button on Categories? | Open | Omit — Review with no selection already does this. |
@@ -172,9 +173,11 @@ Shared semantic or foundation tokens are reused as the interim choice. `tokens.j
 
 **Carried over from the earlier review** (status: assumed in specs; not separately confirmed): label "Save expense" (SG-16 sentence case); five button labels (Continue, Review, Save expense, Done, Add another); loading only on Save expense; disabled only on the Amount step; ₹ in secondary color at full size; no separate CategoryBreakdown spec in this package.
 
-### Recommended Style Guide amendments (for a separate PR — not made here)
+### Style Guide amendments — applied in STYLE_GUIDE.md v0.2
 
-| Rule | Current wording (summary) | Recommended amendment | Driven by |
+These were recommended when the specifications were written and have since been applied (rule IDs and values unchanged; `tokens.json` unaffected). REF-G01 was also removed as a category-grid reference from SG-21 and Appendix A.
+
+| Rule | Previous wording (v0.1, summary) | Amendment applied in v0.2 | Driven by |
 |---|---|---|---|
 | SG-18 | Acceptance: button top edge identical (± 0 px) across steps 1–3. | Replace with: button docked to the bottom of the available viewport with a consistent offset plus safe-area inset; docks above the keyboard; never scrolled off screen in portrait, landscape or short viewports. | D-1 |
 | SG-23 | "3 columns on phones 360–430 px" and "4 columns when tiles ≥ 88 px". | State: 3 columns across 320–430 px; 4 columns only above 430 px when each tile is ≥ 88 px; 2 columns when labels would exceed 2 lines at large text. | C-1, D-3 |

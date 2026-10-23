@@ -1,12 +1,19 @@
 # Expense Tracker — Frontend Style Guide
 
-**Version:** 0.1 (draft for review) | **Date:** 24 October 2026 | **Design-system stage:** Step 1 — Style Guide
+**Version:** 0.2 | **Date:** 24 October 2026 | **Design-system stage:** Step 1 — Style Guide (consistency update after Step 3)
 **Scope:** Visual and interaction rules only. Design tokens, component specification files and application code are out of scope for this document and will be derived from it.
 
 **Inputs used**
 
 - `README.md`, `docs/PRODUCT_VISION.md` (v1.1), `references/REFERENCE_CATALOG.md` (v0.6), `references/SCREEN_REFERENCES.md` (v0.3)
 - Five reference images from Project Context, all inspected directly: `REF-P01.png`, `REF-D01.png`, `REF-U01.png`, `REF-G01.jpg`, `REF-G02.png` (see [Appendix A](#appendix-a--reference-image-inspection-log))
+
+**Change log**
+
+| Version | Changes |
+|---|---|
+| 0.2 | Consistency cleanup after component specifications (`design-system/components/`): SG-18 acceptance now describes flexible bottom docking (decision D-1); SG-23 column rules clarified for the full phone range (contradiction C-1); SG-29 completed segments no longer carry a ✓ in the compact indicator (contradiction C-2, decision D-2); REF-G01 removed as a category-grid reference (SG-21, Appendix A). No rule IDs changed; no values changed; `tokens.json` unaffected. |
+| 0.1 | Initial style guide. |
 
 **How to read the rules**
 
@@ -309,11 +316,11 @@ White surfaces on `#F7F8FA` are only 1.06:1, so **surfaces must not rely on the 
 
 ### SG-18 — Primary Button Shape and Placement
 
-- **Rule:** The primary button is full-width within the screen gutters, **56 px** tall, corner radius 12 px, and fixed to the bottom of the screen above the safe area (with 16 px bottom spacing). It stays in the same position on every entry step and remains visible when the keyboard is open (it rides above the keyboard).
+- **Rule:** The primary button is full-width within the screen gutters, **56 px** tall, corner radius 12 px, and docked to the bottom of the available viewport with 16 px bottom spacing added to the device safe-area inset (home indicator, gesture bar, cut-outs). Its relationship to the bottom edge is the same on every entry step; its absolute position may change with the keyboard, orientation, window size or text size. When the keyboard is open it docks to the top of the keyboard. It never scrolls out of view — screen content scrolls above it.
 - **Rationale:** Consistent placement builds muscle memory; bottom placement is in thumb reach on large phones.
 - **Reference:** REF-U01 (observed: full-width button at the bottom of the screen, below options and payment row).
 - **Components:** PrimaryActionButton.
-- **Acceptance:** Button top edge position is identical (± 0 px) across steps 1–3 on the same device; never scrolled off-screen.
+- **Acceptance:** On steps 1–3 the button is docked to the bottom of the available viewport with the same offset (16 px + safe-area inset), docks above the keyboard when it is open, and is never scrolled off-screen or hidden — verified in portrait and landscape, keyboard open and closed, on a device with a home indicator/gesture bar, and on a short viewport (e.g. 320 × 568). *(Amended in v0.2; previously required an identical top-edge position, which cannot hold across keyboards, orientations and safe areas.)*
 - **Basis:** Observed (placement) + Proposal (dimensions, radius).
 
 ### Secondary button appearance (proposal)
@@ -360,7 +367,7 @@ White surfaces on `#F7F8FA` are only 1.06:1, so **surfaces must not rely on the 
 
 - **Rule:** All category tiles in a grid share identical size, shape, border, icon size and label style. No category is visually promoted over another in its default state.
 - **Rationale:** Categories are peers; unequal styling implies a recommendation the product does not make.
-- **Reference:** REF-P01 (observed: "Transfer Money" row of four identically sized icon tiles with labels; "Recharge & Pay Bills" grid of uniform icon + label items); REF-G01 (observed: "Select portfolio" sheet uses a 2 × 2 grid of identical white cards, each with a circular icon and a label).
+- **Reference:** REF-P01 (observed: "Transfer Money" row of four identically sized icon tiles with labels; "Recharge & Pay Bills" grid of uniform icon + label items).
 - **Components:** CategoryTile, CategoryGrid.
 - **Acceptance:** In the unselected state, all tiles in a grid have identical dimensions and styling.
 - **Basis:** Observed.
@@ -385,11 +392,14 @@ White surfaces on `#F7F8FA` are only 1.06:1, so **surfaces must not rely on the 
 
 ### SG-23 — Tile Dimensions and Grid
 
-- **Rule:** Default grid of **3 columns** on phones 360–430 px wide; tiles are square-ish, **minimum 96 px tall**, width filling the column, corner radius 12 px, 12 px gap between tiles, 16 px screen gutter. Move to 4 columns only when each tile can still be ≥ 88 px wide.
+- **Rule:** Tiles are square-ish, **minimum 96 px tall**, width filling the column, corner radius 12 px, 12 px gap between tiles, 16 px screen gutter. Column count:
+  - **3 columns** across the documented phone range, **320–430 px** viewport width (≈ 88 px tiles at 320 px, ≈ 101 px at 360 px).
+  - **4 columns** only when the viewport is **wider than 430 px** *and* each tile can still be ≥ 88 px wide (e.g. tablet/web, where content is capped at 480 px).
+  - **2 columns** when, at large system text sizes, any label would exceed two lines at the current column count (SG-43).
 - **Rationale:** At 360 px width, three columns give ~101 px tiles — room for a 48 px icon plate and a two-line label at 15 px. PhonePe's four-across rows produce tiles too narrow for multi-word labels at accessible text sizes.
 - **Reference:** REF-P01 (observed: four-across rows — adapted, not copied).
 - **Components:** CategoryTile, CategoryGrid.
-- **Acceptance:** At 360 px width with default text size, every label fits in ≤ 2 lines and every tile is ≥ 96 × 96 px.
+- **Acceptance:** At 360 px width with default text size, every label fits in ≤ 2 lines and every tile is ≥ 96 × 96 px. Phones from 320 to 430 px show 3 columns; 4 columns never appear at or below 430 px. *(Clarified in v0.2: the earlier wording allowed 4 columns from 420 px, conflicting with "3 columns on phones 360–430 px".)*
 - **Basis:** Proposal.
 
 ### SG-24 — Unmistakable Selected State (Multi-Cue)
@@ -458,11 +468,11 @@ Basic path: type amount → Continue → tap tile(s) → Review → Save expense
 
 | State | Treatment |
 |---|---|
-| Completed | Filled near-black segment with a small ✓; tappable to return to that step |
+| Completed | Filled near-black segment, **no ✓** in the compact segmented indicator; tappable to return to that step |
 | Current | Filled accent-blue segment, slightly taller/bolder; step name shown |
-| Upcoming | Outlined/light grey segment; not tappable |
+| Upcoming | Light grey segment; not tappable |
 
-- **Rationale:** Distinct, non-color-only states make progress legible.
+- **Rationale:** Distinct, non-color-only states make progress legible. In the compact indicator a ✓ cannot be drawn legibly inside a 4 px segment, so completion is conveyed by lightness (grayscale-distinct from upcoming), position before the current step, the "Step n of 3" caption and each segment's accessible state; the current step is additionally taller. *(Clarified in v0.2.)*
 - **Reference:** REF-D01 (observed and annotated in the image: completed levels gilded with a check; current level in unit color with a star, a progress ring and a "START" tooltip; locked levels greyed out with a lock icon).
 - **Components:** ExpenseProgressIndicator.
 - **Acceptance:** Each of the three states is distinguishable in grayscale; screen reader announces "Step 2 of 3, Categories, current".
@@ -652,7 +662,7 @@ Three equal columns with 12 px gaps inside 16 px gutters; Unknown always last; s
 **Rules:** SG-21, SG-23, SG-25, SG-26, SG-43.
 
 ### ExpenseProgressIndicator
-A slim three-segment bar at the top of each entry screen with a caption "Step n of 3 · Name". Completed segments near-black with ✓ and tappable; current segment accent blue and emphasized; upcoming segments light outline. Includes or sits beside the back control.
+A slim three-segment bar at the top of each entry screen with a caption "Step n of 3 · Name". Completed segments near-black (no ✓) and tappable; current segment accent blue and taller; upcoming segments light grey. Includes or sits beside the back control.
 **Rules:** SG-28, SG-29, SG-30, SG-42.
 
 ### AmountInput
@@ -693,7 +703,7 @@ White card with the period total above a single-series line or column chart in a
 | SG-18 Primary Button Shape & Placement | REF-U01 | PrimaryActionButton | Height, width, corner radius, bottom position |
 | SG-19 Button States | REF-U01 (default only) | PrimaryActionButton, secondary buttons | Pressed/focus/loading/disabled fills and indicators |
 | SG-20 Disabled Primary Explains Itself | Vision §4.1, §4.5 | PrimaryActionButton, AmountInput, CategoryGrid | Helper text adjacent to disabled button |
-| SG-21 Equal-Weight Tiles | REF-P01, REF-G01 | CategoryTile, CategoryGrid | Uniform tile size, border, icon size, label style |
+| SG-21 Equal-Weight Tiles | REF-P01 | CategoryTile, CategoryGrid | Uniform tile size, border, icon size, label style |
 | SG-22 Icon + Label Always | REF-P01; Vision §7 | CategoryTile | Icon and visible label pairing |
 | SG-23 Tile Dimensions & Grid | REF-P01 (adapted) | CategoryTile, CategoryGrid | Column count, min tile size, gap, radius |
 | SG-24 Multi-Cue Selected State | REF-U01, REF-D01 | CategoryTile | Tint fill, border width/color, check badge, label weight |
@@ -733,7 +743,7 @@ All five Project Context images were opened and inspected for this guide. Observ
 | REF-P01 | `REF-P01.png` | PhonePe home: purple header; "Transfer Money" row of four equal purple squircle icons with two-line labels; a row of three blue filled shortcut tiles; "Recharge & Pay Bills" grid of outline icons with labels and a "See All" tile; bottom navigation. | Equal-weight icon + label tiles; label wrapping; uniform grid. | Purple branding, proprietary icons, super-app density, sponsored content. |
 | REF-D01 | `REF-D01.png` | Annotated Duolingo path: completed levels gold with checks; current level green with star, progress ring and "START" tooltip; upcoming/locked levels grey with lock icons; unit header; streak, gem and heart counters in the top bar. | Three distinguishable progress states using icon + color; encouraging tone. | Winding path, mascot, gems/hearts/streaks, bright game palette. |
 | REF-U01 | `REF-U01.png` | Uber ride selection (Spanish): map with route; circular back button; three ride options (image, name, time, price) with the selected "Comfort" row tinted light blue; payment row; full-width black "Confirmar Comfort" button at bottom. | One dominant black CTA at bottom; tinted selected row; subordinate back and payment controls. | Map, transport flow, Spanish copy. |
-| REF-G01 | `REF-G01.jpg` | Two Groww phones. Left (dimmed) has a "Select portfolio" bottom sheet with a 2 × 2 grid of white cards, each with a circular icon and label ("All holdings", "Long term", "Value investing", "Add new portfolio"). Right: "Stocks" screen with underlined tabs; a card with "LONG TERM (5)" overline, "₹10,00,000" headline, rows for 1D returns (red), Total returns (green), Invested; a holdings list with sparklines and right-aligned amounts; bottom navigation. | Headline-amount hierarchy, overline label, label-left/value-right rows, Indian grouping, bottom-sheet disclosure, uniform tile grid. | Market index chips, returns terminology, red/green gain/loss coloring. |
+| REF-G01 | `REF-G01.jpg` | Two Groww phones. Left (dimmed) has a "Select portfolio" bottom sheet with a 2 × 2 grid of white cards, each with a circular icon and label ("All holdings", "Long term", "Value investing", "Add new portfolio"). Right: "Stocks" screen with underlined tabs; a card with "LONG TERM (5)" overline, "₹10,00,000" headline, rows for 1D returns (red), Total returns (green), Invested; a holdings list with sparklines and right-aligned amounts; bottom navigation. | Headline-amount hierarchy, overline label, label-left/value-right rows, Indian grouping, bottom-sheet disclosure. | Market index chips, returns terminology, red/green gain/loss coloring; the sheet's tile grid (outside REF-G01's approved summary-hierarchy role — category grids trace to REF-P01). |
 | REF-G02 | `REF-G02.png` (replacement file) | Two Groww phones. Left: donut chart above a "Sectors" list, each row with a colored leading bar, sector name, stock count and percentage, right-aligned amount and green change. Right: "Portfolio analysis" with back arrow, "Current" and "Invested" headline values, solid line vs dotted grey line chart, time-range pills "1W 1M 3M 6M 1Y 5Y All" with "All" outlined, and an "XIRR" insight card with an info icon. | Values above chart, single-plus-comparison line style, time-range pill row, labeled breakdown list, info affordance for explanations. | Donut for overlapping tags, XIRR / NIFTY comparisons, sector/investment language. |
 
 **Verification notes**
