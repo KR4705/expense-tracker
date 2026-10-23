@@ -1,8 +1,8 @@
 # Component Specifications — Expense Tracker
 
-**Version:** 0.3 | **Date:** 24 October 2026
+**Version:** 0.4 | **Date:** 24 October 2026
 **Design-system stage:** Step 3 — Component Specifications
-**Sources (all from `main`):** `docs/PRODUCT_VISION.md` v1.1 · `design-system/STYLE_GUIDE.md` v0.2 · `design-system/tokens.json` v0.1.0 · `references/REFERENCE_CATALOG.md` v0.6
+**Sources:** `docs/PRODUCT_VISION.md` v1.2 · `design-system/STYLE_GUIDE.md` v0.3 · `design-system/tokens.json` v0.1.0 · `references/REFERENCE_CATALOG.md` v0.7 · `src/data/categories.json` v1.0.0
 
 These specifications describe appearance and behavior only. They contain no application code. Neither the Style Guide nor `tokens.json` was modified to write them; gaps and contradictions are reported below for separate decision.
 
@@ -12,7 +12,7 @@ These specifications describe appearance and behavior only. They contain no appl
 |---|---|---|---|
 | PrimaryActionButton | The one forward action on each entry screen | REF-U01 | [PrimaryActionButton.md](PrimaryActionButton.md) |
 | CategoryTile | One selectable category (checkbox behavior) | REF-P01 | [CategoryTile.md](CategoryTile.md) |
-| CategoryGrid | Category layout, multi-select set, Unknown exclusivity | REF-P01 | [CategoryGrid.md](CategoryGrid.md) |
+| CategoryGrid | Category layout, multi-select set, Other last, inactive tiles | REF-P01 | [CategoryGrid.md](CategoryGrid.md) |
 | ExpenseProgressIndicator | Step position and back navigation | REF-D01 | [ExpenseProgressIndicator.md](ExpenseProgressIndicator.md) |
 | AmountInput | Fast, accurate rupee entry | REF-G01, REF-G02 | [AmountInput.md](AmountInput.md) |
 | SpendingSummaryCard | Headline spending total for the period | REF-G01 | [SpendingSummaryCard.md](SpendingSummaryCard.md) |
@@ -39,7 +39,8 @@ Every specification has the same twelve sections: purpose; product requirements;
 | **SG-04** Progressive Disclosure | SpendingSummaryCard §6.1–6.2; SpendingTrendCard §6.4 | Card shows total + ≤ 3 metrics only; detail and breakdown are one tap away; trend inspection never navigates. |
 | **SG-15** Indian Number Formatting | AmountInput §6.2; SpendingSummaryCard §6.4; SpendingTrendCard §6.7 | Live en-IN grouping while typing; no abbreviations at entry; abbreviations on dashboard only when full value is shown on tap and read by screen readers. |
 | **SG-25** Multi-Select Behavior | CategoryTile §4, §6–7; CategoryGrid §6.1, §7; PrimaryActionButton §5.4 | Tiles are checkboxes; 0…n selections; live summary; selections carry to Review; Review never disabled. |
-| **SG-26** Unknown Is a First-Class Choice | CategoryTile §4 (`exclusive` variant); CategoryGrid §6.2 | Identical styling; always last; selecting Unknown clears others and vice versa; empty selection saves as Uncategorized; changes announced. |
+| **SG-26** Other and Uncategorized Are First-Class Choices | CategoryTile §4, §6; CategoryGrid §6.2, §6.5 | Other has identical styling, is always last and combines with any tag; empty selection saves as Uncategorized. |
+| **SG-45** Inactive Categories Are Visible but Disabled | CategoryTile §4, §6, §7; CategoryGrid §4, §5, §6.2 | Inactive records render as disabled tiles in place; not selectable; announced as unavailable. |
 | **SG-41** Screen Reader Semantics | §7 of all seven specs | Roles, names, states, live announcements, spoken amounts, chart text summary and list alternative. |
 
 ## 4. Cross-component traceability matrix
@@ -75,7 +76,7 @@ PAB = PrimaryActionButton · Tile = CategoryTile · Grid = CategoryGrid · Prog 
 | SG-23 Tile Dimensions and Grid |  | ● | ● |  |  |  |  |
 | SG-24 Unmistakable Selected State (Multi-Cue) |  | ● |  |  |  |  |  |
 | SG-25 Multi-Select Behavior | ○ | ● | ● |  |  |  |  |
-| SG-26 Unknown Is a First-Class Choice | ○ | ● | ● |  |  |  |  |
+| SG-26 Other and Uncategorized Are First-Class Choices | ○ | ● | ● |  |  |  |  |
 | SG-27 Category Label Rules |  | ● |  |  |  |  |  |
 | SG-28 Always-Visible Step Indicator |  |  |  | ● |  |  |  |
 | SG-29 Completed, Current and Upcoming States |  |  |  | ● |  |  |  |
@@ -94,6 +95,7 @@ PAB = PrimaryActionButton · Tile = CategoryTile · Grid = CategoryGrid · Prog 
 | SG-42 Non-Color Interaction States | ● | ● |  | ● | ● | ○ | ● |
 | SG-43 Text Scaling | ● | ● | ● | ● | ● | ● | ● |
 | SG-44 Reduced Motion | ● | ● |  | ● |  |  | ● |
+| SG-45 Inactive Categories Are Visible but Disabled |  | ● | ● |  |  |  |  |
 
 **Not cited by any of the seven:** SG-05 (light-first screens) is a screen-level rule, and SG-37 (category breakdown list) belongs to the CategoryBreakdown component, which is outside this package.
 
@@ -125,6 +127,7 @@ PAB = PrimaryActionButton · Tile = CategoryTile · Grid = CategoryGrid · Prog 
 | Style Guide / tokens modified | No |
 | Re-run after review decisions D-1, D-2, C-1, D-7, D-11, D-13, G-9, G-10 | Pass — 0 errors across all seven specs and this README |
 | Re-run against STYLE_GUIDE.md v0.2 (SG-18, SG-23, SG-29 amended) | Pass — 0 errors; no rule IDs changed |
+| Re-run against STYLE_GUIDE.md v0.3 (SG-26 amended, SG-45 added; decisions D-15 – D-21) | Pass — 45 rules defined, all cited IDs exist; 580 token references in specs, all exist in `tokens.json`; no numeric value changed |
 
 **Accessibility status.** Token-level contrast checks passed (`tokens.json` → `accessibilityStatus`). **Component-level accessibility is unverified** for all seven components until built and tested with VoiceOver, TalkBack, keyboard/switch access, 200 % text and reduced motion.
 
@@ -159,9 +162,9 @@ Shared semantic or foundation tokens are reused as the interim choice. `tokens.j
 | D-1 | PrimaryActionButton | Flexible bottom docking (safe areas, keyboard, orientation, viewport height) instead of an identical top edge. | **Approved** | Applied in specs; SG-18 amended in Style Guide v0.2. |
 | D-2 | ExpenseProgressIndicator | Remove ✓ from compact segments. | **Approved** | Applied in specs; SG-29 clarified in Style Guide v0.2. |
 | D-3 | CategoryGrid | Trigger for the 2-column large-text layout. | Open | Switch when any label would exceed 2 lines at 3 columns. |
-| D-4 | CategoryGrid | Undo after Unknown clears other selections. | Open | No undo in MVP; announcement + summary suffice. Revisit after testing. |
+| D-4 | CategoryGrid | Undo after Unknown clears other selections. | **Withdrawn** | No longer applicable: Unknown is removed and no selection clears another (D-15). |
 | D-5 | CategoryGrid | Include a Skip text button on Categories? | Open | Omit — Review with no selection already does this. |
-| D-6 | CategoryTile | Disabled tile state has no MVP use. | Open | Keep specified for future use; do not use in MVP. |
+| D-6 | CategoryTile | Disabled tile state has no MVP use. | **Resolved** | Used for inactive categories (D-18, SG-45). |
 | D-7 | AmountInput | Maximum transaction amount. | **Approved** | No arbitrary maximum. A technical numeric precision/storage limit is required and must be defined in the data/save-workflow spec. Business limits, if any, are configurable (`businessLimit`). |
 | D-8 | AmountInput | INR only in MVP? | Open | Yes; other currencies need separate discovery. |
 | D-9 | AmountInput | Long amounts shrink to 24 px then wrap (extends SG-43's headline rule to entry). | Open | Accept. |
@@ -170,8 +173,27 @@ Shared semantic or foundation tokens are reused as the interim choice. `tokens.j
 | D-12 | SpendingTrendCard | Buckets: Week/Month daily, 3 months weekly, Year monthly. | Open | Accept. |
 | D-13 | SpendingTrendCard | Previous-period comparison line. | **Approved — excluded from initial release** | Applied. Comparison tokens remain in `tokens.json` for a later release but are not rendered. |
 | D-14 | SpendingTrendCard | Short pill labels (W/M/3M/Y) at 320 px. | Open | Accept, with full accessible names. |
+| D-15 | CategoryTile, CategoryGrid | Catch-all category. | **Approved** (24 Oct 2026) | **Other** replaces Unknown and Miscellaneous. It is a normal, non-exclusive category, always active and always last. Applied in SG-26, CategoryTile v0.2, CategoryGrid v0.2. |
+| D-16 | Category data | Labels and IDs. | **Approved** (24 Oct 2026) | Labels Food, Home, Shop, Transit, Health, Fun, Travel, Charity, Other. Home and Transit keep stable IDs `housing` and `transport`. |
+| D-17 | CategoryGrid | Initial display order. | **Approved for initial MVP** (24 Oct 2026) | Food, Home, Shop, Transit, Health, Fun, Travel, Charity, Other. To be revisited after collecting actual user behavior. |
+| D-18 | CategoryTile, CategoryGrid | Meaning of an inactive category. | **Approved** (24 Oct 2026) | Visible but disabled: shown in place, not selectable. New rule SG-45; resolves D-6. |
+| D-19 | CategoryGrid | Zero selected categories. | **Approved** (24 Oct 2026) | Valid; saved as **Uncategorized** (a saved state, not a category). |
+| D-20 | Category data | Bills. | **Approved** (24 Oct 2026) | Bills is part of Home; no separate Bills category. |
+| D-21 | CategoryTile | Icon set. | **Approved** (24 Oct 2026) | Lucide (ISC). Identifiers in `src/data/category-icons.json`; Other uses `circle-ellipsis`. |
 
 **Carried over from the earlier review** (status: assumed in specs; not separately confirmed): label "Save expense" (SG-16 sentence case); five button labels (Continue, Review, Save expense, Done, Add another); loading only on Save expense; disabled only on the Amount step; ₹ in secondary color at full size; no separate CategoryBreakdown spec in this package.
+
+### Style Guide amendments — applied in STYLE_GUIDE.md v0.3
+
+Driven by product-owner decisions D-15 – D-21. Rule IDs are unchanged except for the new SG-45; no values changed; `tokens.json` unaffected.
+
+| Rule | Previous wording (v0.2, summary) | Amendment applied in v0.3 | Driven by |
+|---|---|---|---|
+| SG-26 | "Unknown Is a First-Class Choice": Unknown always last, question-mark icon, mutually exclusive; Miscellaneous combines freely. | "Other and Uncategorized Are First-Class Choices": Other always present, active and last, "more" icon, non-exclusive; zero selections saved as Uncategorized; no Unknown or Miscellaneous. | D-15, D-19 |
+| SG-45 *(new)* | — | Inactive categories are visible but disabled: shown in place, not selectable, announced as unavailable. | D-18 |
+| SG-37 | "Uncategorized/Unknown appears as its own row." | "Uncategorized appears as its own row; Other is a normal tag row." | D-15 |
+| SG-41 | Unknown announces "clears other categories". | Disabled (inactive) tiles are announced as unavailable. | D-15, D-18 |
+| §A.3, §K, traceability, Appendix B | Unknown flow; category set open. | Other / Uncategorized flow; SG-45 listed; Appendix B questions 1–2 marked resolved. | D-15 – D-21 |
 
 ### Style Guide amendments — applied in STYLE_GUIDE.md v0.2
 

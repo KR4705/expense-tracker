@@ -9,7 +9,7 @@ The intended audience is financially unorganized high-net-worth individuals and 
 The core experience aims to make a typical expense recordable in approximately three or four simple interactions:
 - A clear, guided sequence with one prominent next action.
 - Large, recognizable controls.
-- Icon-supported category tiles that permit multiple tags, including Unknown.
+- Icon-supported category tiles that permit multiple tags, including Other; an expense with no tag is saved as Uncategorized.
 - A readable financial summary that does not double-count transactions assigned to multiple categories.
 
 These are product intentions, not yet validated usability outcomes.

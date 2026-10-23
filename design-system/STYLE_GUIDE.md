@@ -1,6 +1,6 @@
 # Expense Tracker — Frontend Style Guide
 
-**Version:** 0.2 | **Date:** 24 October 2026 | **Design-system stage:** Step 1 — Style Guide (consistency update after Step 3)
+**Version:** 0.3 | **Date:** 24 October 2026 | **Design-system stage:** Step 1 — Style Guide (consistency update for approved category behavior)
 **Scope:** Visual and interaction rules only. Design tokens, component specification files and application code are out of scope for this document and will be derived from it.
 
 **Inputs used**
@@ -12,6 +12,7 @@
 
 | Version | Changes |
 |---|---|
+| 0.3 | Approved category behavior (product-owner decisions D-15 – D-21, 24 October 2026): SG-26 now defines **Other** (non-exclusive, always last) and **Uncategorized** (zero selections) in place of Unknown and Miscellaneous; new rule **SG-45** (inactive categories visible but disabled); SG-37, SG-41, §A.3, §K, the traceability table and Appendix B updated to match. No other rule changed; no values changed; `tokens.json` unaffected. |
 | 0.2 | Consistency cleanup after component specifications (`design-system/components/`): SG-18 acceptance now describes flexible bottom docking (decision D-1); SG-23 column rules clarified for the full phone range (contradiction C-1); SG-29 completed segments no longer carry a ✓ in the compact indicator (contradiction C-2, decision D-2); REF-G01 removed as a category-grid reference (SG-21, Appendix A). No rule IDs changed; no values changed; `tokens.json` unaffected. |
 | 0.1 | Initial style guide. |
 
@@ -47,7 +48,7 @@ Proposed values (colors, sizes, spacing) are style-guide recommendations. They a
 
 | # | Principle | Primary rules | Reference |
 |---|---|---|---|
-| P1 | **Many choices → equal-weight visual tiles** | SG-21 – SG-27 | REF-P01 |
+| P1 | **Many choices → equal-weight visual tiles** | SG-21 – SG-27, SG-45 | REF-P01 |
 | P2 | **One next action → one dominant button** | SG-01, SG-02, SG-18 | REF-U01 |
 | P3 | **Multiple steps → always-visible progression** | SG-28 – SG-31 | REF-D01 |
 | P4 | **Categories → icon + label + unmistakable selection state** | SG-22, SG-24 | REF-P01, REF-U01, REF-D01 |
@@ -55,7 +56,7 @@ Proposed values (colors, sizes, spacing) are style-guide recommendations. They a
 
 ### A.3 Desired experience
 
-A user opens the app, sees a large amount field and a single button, and records an expense in three steps — **Amount → Categories → Review & Save** — without ever wondering what to press next. If they cannot decide on a category, they pick **Unknown** or skip it and still save. Afterwards, the dashboard tells them one number first (what they spent), then how it trended, then — only if they ask — where it went.
+A user opens the app, sees a large amount field and a single button, and records an expense in three steps — **Amount → Categories → Review & Save** — without ever wondering what to press next. If no category fits, they pick **Other**; if they cannot decide, they skip the step and the expense is still saved (as Uncategorized). Afterwards, the dashboard tells them one number first (what they spent), then how it trended, then — only if they ask — where it went.
 
 ### SG-05 — Light-First, Uncluttered Screens
 
@@ -420,14 +421,14 @@ White surfaces on `#F7F8FA` are only 1.06:1, so **surfaces must not rely on the 
 - **Acceptance:** Selecting two tiles keeps both selected; screen readers announce each tile as a checkbox with "selected/not selected" state; the summary count matches the selection.
 - **Basis:** Requirement + Proposal (summary line).
 
-### SG-26 — Unknown Is a First-Class Choice
+### SG-26 — Other and Uncategorized Are First-Class Choices
 
-- **Rule:** An **Unknown** tile is always present, always in the same position (last tile in the grid), and styled exactly like other tiles (SG-21) — never greyed out, smaller or hidden behind "More". Its icon is a neutral question mark. Selecting Unknown **clears other selections**, and selecting another category clears Unknown (they are mutually exclusive). **Miscellaneous** is a normal category and combines freely with others. Saving with zero selections is also allowed and is recorded as "Uncategorized".
-- **Rationale:** Vision §4.1 and §4.5 require that users can save without resolving the category. Unknown alongside Food would be contradictory, hence exclusivity.
-- **Reference:** — (Product Vision).
+- **Rule:** An **Other** tile is always present, always active, always in the same position (last tile in the grid), and styled exactly like other tiles (SG-21) — never greyed out, smaller or hidden behind "More". Its icon is a neutral "more" glyph (three dots in a circle), not a question mark. Other is a **normal, non-exclusive category**: it can be selected alongside any other categories, and selecting it never clears another selection. Saving with **zero selections** is allowed and is recorded as **Uncategorized**; Uncategorized is a saved state, not a tile. There is no Unknown or Miscellaneous category.
+- **Rationale:** Vision §4.1 and §4.5 require that users can save without resolving the category. One catch-all keeps the grid simple, and because "Other" does not contradict any other tag, no exclusivity rule is needed.
+- **Reference:** — (Product Vision; product-owner decisions D-15 and D-19, 24 October 2026).
 - **Components:** CategoryTile, CategoryGrid.
-- **Acceptance:** Unknown is visible without scrolling on a 360 × 640 screen *or* the grid is ordered so it is reachable within one scroll; selecting Unknown leaves exactly one selection; an expense with no category saves successfully.
-- **Basis:** Requirement + Proposal (exclusivity, placement). *Exclusivity should be confirmed with the product owner.*
+- **Acceptance:** Other is the last tile and is visible without scrolling on a 360 × 640 screen *or* reachable within one scroll; selecting Other keeps every existing selection; an expense with no category saves successfully and is recorded as Uncategorized.
+- **Basis:** Requirement + product-owner decision. *(Amended in v0.3; previously a mutually exclusive Unknown tile plus a separate Miscellaneous category.)*
 
 ### SG-27 — Category Label Rules
 
@@ -437,6 +438,15 @@ White surfaces on `#F7F8FA` are only 1.06:1, so **surfaces must not rely on the 
 - **Components:** CategoryTile.
 - **Acceptance:** No label exceeds two lines at default text size; no ellipses.
 - **Basis:** Observed + Proposal.
+
+### SG-45 — Inactive Categories Are Visible but Disabled
+
+- **Rule:** A category marked inactive stays visible in its normal grid position, uses the disabled tile state (§C.5), and cannot be selected by tap, keyboard or assistive technology. It is never hidden, removed from the grid or moved. Other is never inactive (SG-26).
+- **Rationale:** Product-owner decision: inactive means inaccessible, not hidden. A stable grid keeps tile positions predictable between visits (SG-21).
+- **Reference:** — (product-owner decision D-18, 24 October 2026).
+- **Components:** CategoryTile, CategoryGrid.
+- **Acceptance:** An inactive tile renders in the disabled state in its usual position; tapping, Space or screen-reader activation does not change the selection; screen readers announce it as unavailable; all other tiles keep their positions.
+- **Basis:** Requirement (product-owner decision). *(Added in v0.3.)*
 
 ---
 
@@ -549,7 +559,7 @@ Dashboard reading order, top to bottom: **Headline total → Trend → Breakdown
 
 ### SG-37 — Category Breakdown as a Labeled List
 
-- **Rule:** The breakdown is a list sorted by amount: tag icon + name, amount (right-aligned, tabular), count of expenses, and a thin horizontal bar showing relative size in a single hue. Show the top 5 tags and "See all tags" for the rest. Pie/donut charts are not used for tags because overlapping tags cannot form a meaningful whole (SG-34). Uncategorized/Unknown appears as its own row.
+- **Rule:** The breakdown is a list sorted by amount: tag icon + name, amount (right-aligned, tabular), count of expenses, and a thin horizontal bar showing relative size in a single hue. Show the top 5 tags and "See all tags" for the rest. Pie/donut charts are not used for tags because overlapping tags cannot form a meaningful whole (SG-34). Uncategorized appears as its own row; Other is a normal tag row.
 - **Rationale:** A list is readable, accessible and honest about overlap.
 - **Reference:** REF-G02 (observed: sector list with a leading color bar, name, count and percentage sub-line, right-aligned amount — list pattern adopted; donut **not** adopted for tags).
 - **Components:** Category breakdown (part of dashboard), SpendingSummaryCard drill-down.
@@ -609,7 +619,7 @@ Target: **WCAG 2.2 AA** throughout, AAA for primary text and the primary button 
 
 ### SG-41 — Screen Reader Semantics
 
-- **Rule:** Primary button = button with its full label. Category tiles = checkboxes ("Food, checkbox, selected"). Unknown announces its exclusive behavior ("Unknown, clears other categories"). Progress indicator announces "Step n of 3, name". Amounts are read in full ("fifteen lakh rupees"), never as abbreviations. Charts have a text summary ("Spending rose from ₹42,000 in August to ₹51,000 in September"). Save confirmation and errors are announced as live regions.
+- **Rule:** Primary button = button with its full label. Category tiles = checkboxes ("Food, checkbox, selected"). Disabled (inactive) category tiles are announced as unavailable (SG-45). Progress indicator announces "Step n of 3, name". Amounts are read in full ("fifteen lakh rupees"), never as abbreviations. Charts have a text summary ("Spending rose from ₹42,000 in August to ₹51,000 in September"). Save confirmation and errors are announced as live regions.
 - **Rationale:** The guided flow must work identically with VoiceOver/TalkBack.
 - **Reference:** — (accessibility standard).
 - **Components:** All.
@@ -654,12 +664,12 @@ Full-width, 56 px tall, near-black fill, white 17 px semibold label, 12 px radiu
 **Rules:** SG-01, SG-02, SG-07, SG-16, SG-17, SG-18, SG-19, SG-20.
 
 ### CategoryTile
-A ≥ 96 px square-ish white card with a control-boundary border, a 28 px outline icon centred in a 48 px soft circle, and a 1–2 word label below. Toggles on tap; selected = blue tint + 2 px blue border + corner check + bolder label. Behaves as a checkbox for assistive technology. The Unknown variant looks identical but is mutually exclusive.
-**Rules:** SG-06, SG-08, SG-21, SG-22, SG-24, SG-26, SG-27, SG-41, SG-42.
+A ≥ 96 px square-ish white card with a control-boundary border, a 28 px outline icon centred in a 48 px soft circle, and a 1–2 word label below. Toggles on tap; selected = blue tint + 2 px blue border + corner check + bolder label. Behaves as a checkbox for assistive technology. Other looks identical and combines with other tiles; inactive categories use the disabled state and cannot be selected.
+**Rules:** SG-06, SG-08, SG-21, SG-22, SG-24, SG-26, SG-27, SG-41, SG-42, SG-45.
 
 ### CategoryGrid
-Three equal columns with 12 px gaps inside 16 px gutters; Unknown always last; supports 0…n selections; shows a live selection summary ("2 selected: Food, Charity") above the primary button. Never disables Continue. Reflows to two columns at large text sizes.
-**Rules:** SG-21, SG-23, SG-25, SG-26, SG-43.
+Three equal columns with 12 px gaps inside 16 px gutters; Other always last; inactive categories shown disabled in place; supports 0…n selections (zero is saved as Uncategorized); shows a live selection summary ("2 selected: Food, Charity") above the primary button. Never disables Continue. Reflows to two columns at large text sizes.
+**Rules:** SG-21, SG-23, SG-25, SG-26, SG-43, SG-45.
 
 ### ExpenseProgressIndicator
 A slim three-segment bar at the top of each entry screen with a caption "Step n of 3 · Name". Completed segments near-black (no ✓) and tappable; current segment accent blue and taller; upcoming segments light grey. Includes or sits beside the back control.
@@ -708,7 +718,7 @@ White card with the period total above a single-series line or column chart in a
 | SG-23 Tile Dimensions & Grid | REF-P01 (adapted) | CategoryTile, CategoryGrid | Column count, min tile size, gap, radius |
 | SG-24 Multi-Cue Selected State | REF-U01, REF-D01 | CategoryTile | Tint fill, border width/color, check badge, label weight |
 | SG-25 Multi-Select Behavior | Vision §4.5 | CategoryGrid, CategoryTile | Toggle behavior; selection summary line |
-| SG-26 Unknown Is First-Class | Vision §4.1, §4.5 | CategoryTile, CategoryGrid | Same styling as peers; fixed last position; exclusivity |
+| SG-26 Other and Uncategorized Are First-Class | Vision §4.1, §4.5; decisions D-15, D-19 | CategoryTile, CategoryGrid | Same styling as peers; fixed last position; non-exclusive; zero selections → Uncategorized |
 | SG-27 Category Label Rules | REF-P01 | CategoryTile | Max 2 lines, centred, no ellipsis |
 | SG-28 Always-Visible Step Indicator | REF-D01 | ExpenseProgressIndicator | Segment count, "Step n of 3" caption, position |
 | SG-29 Completed/Current/Upcoming | REF-D01 | ExpenseProgressIndicator | Per-state fill, icon, emphasis |
@@ -727,6 +737,7 @@ White card with the period total above a single-series line or column chart in a
 | SG-42 Non-Color States | REF-D01, REF-G02 | CategoryTile, ExpenseProgressIndicator, SpendingTrendCard | Non-color cue per state |
 | SG-43 Text Scaling | WCAG 1.4.4 | CategoryGrid, AmountInput, SpendingSummaryCard | Reflow and wrapping behavior |
 | SG-44 Reduced Motion | WCAG 2.3.3 | CategoryTile, completion feedback | Animation duration and reduced-motion fallback |
+| SG-45 Inactive Categories Visible but Disabled | Decision D-18 | CategoryTile, CategoryGrid | Disabled tile state; position unchanged; not selectable |
 
 ### Candidate chain for the assignment (to be completed in later steps)
 
@@ -754,8 +765,8 @@ All five Project Context images were opened and inspected for this guide. Observ
 
 ## Appendix B — Open Questions for Review
 
-1. **Unknown exclusivity (SG-26):** confirm Unknown should clear other selections, and that "no selection" saves as Uncategorized.
-2. **Category set:** the initial list of categories and their icons is not yet defined.
+1. **Unknown exclusivity (SG-26):** *Resolved in v0.3.* Unknown is removed; Other is non-exclusive; "no selection" saves as Uncategorized (D-15, D-19).
+2. **Category set:** *Resolved in v0.3.* Approved MVP list and Lucide icons in `src/data/categories.json` (D-16, D-17, D-20, D-21).
 3. **Font licence and rendering (SG-12):** confirm Inter (or system font) for production.
 4. **Time ranges (SG-36):** confirm Week / Month / 3 Months / Year as the initial set.
 5. **Usability targets (SG-01):** the 80 % first-impression target is a placeholder pending research.

@@ -1,6 +1,6 @@
 # Expense Tracker — Product Vision Document
 
-**Status:** Working product vision | **Version:** 1.1 | **Updated:** 23 October 2026
+**Status:** Working product vision | **Version:** 1.2 | **Updated:** 24 October 2026
 
 ## 1. Vision
 Make expense awareness effortless for people who spend freely but do not consistently organize their spending. Expense Tracker is a mobile-first, low-friction way to capture expenses and understand where money goes, without making budgeting or spending restrictions the product's primary purpose.
@@ -20,13 +20,13 @@ The defining need is **low-effort visibility despite complex or loosely organize
 2. **Guided, progressive flow.** Expense entry should ordinarily take around **3–4 clear interactions/steps**, using a linear journey with a prominent next action on every screen.
 3. **Unmistakable touch controls.** Prefer large, clearly tappable buttons and selection tiles; avoid ambiguous links or dense forms.
 4. **Visual categorization.** Every category choice combines a recognizable icon/illustration or emoji-like visual with a readable label. Distinguish options by more than words or color alone.
-5. **Flexible tags, not forced buckets.** An expense can have **zero, one, or multiple tags**, for example `Food` plus `Charity`. `Unknown` and `Miscellaneous` must be valid choices. An expense need not fit exactly one category.
+5. **Flexible tags, not forced buckets.** An expense can have **zero, one, or multiple tags**, for example `Food` plus `Charity`. `Other` must be a valid choice for anything the listed categories do not cover, and it can be combined with other tags. Saving with no tag is also valid and is recorded as **Uncategorized**. An expense need not fit exactly one category.
 6. **Progress and feedback.** Show where the user is in the journey, make the next step obvious, clearly acknowledge selection and successful saving.
 7. **Low-friction defaults.** Optional details should not block a basic expense entry unless necessary for a reliable record.
 
 ## 5. Illustrative expense-entry journey
 - **Step 1 — Amount:** Enter the expense amount in a focused screen with an obvious Continue button.
-- **Step 2 — Categories/tags:** Choose one or more visual category tiles, or leave uncategorized / select Unknown.
+- **Step 2 — Categories/tags:** Choose one or more visual category tiles (including Other), or select none and save as Uncategorized.
 - **Step 3 — Review and save:** Show a compact summary and a prominent Save Expense button.
 - **Optional fourth step:** Additional details only when necessary; the flow should remain short.
 
@@ -48,7 +48,7 @@ Start with a **light, uncluttered** screen and progressively reveal only the inf
 ## 8. MVP direction
 The initial product should focus on:
 - Fast manual expense capture and editing.
-- Flexible visual multi-tag classification, including Unknown/Miscellaneous.
+- Flexible visual multi-tag classification, including Other, with saving allowed when no category is chosen (Uncategorized).
 - A simple transaction history and clear summary dashboard.
 - An experience that preserves information even when classification is deferred.
 
@@ -67,6 +67,8 @@ Quantitative usability targets and business KPIs remain to be defined through re
 **Visibility and understanding over restriction.** The product should make expense tracking easy enough to become a habit for high spenders who would otherwise avoid financial administration.
 
 ---
+**Revision 1.2 (24 October 2026):** Per product-owner decision, `Unknown` and `Miscellaneous` are replaced by a single, non-exclusive `Other` category, and zero tags is saved as Uncategorized. The approved MVP category list is in `src/data/categories.json`; decisions D-15 – D-21 in `design-system/components/README.md`.
+
 **Naming note:** Expense Tracker is the working name. Khata360 is a possible future brand name, not yet approved.
 
 **Source note:** Consolidated from the product-vision discussions in this project. The exact document uploaded to Claude Project Context was not directly accessible here, so this is a reconstructed version for review; confirm alignment before treating it as the definitive source of truth.
