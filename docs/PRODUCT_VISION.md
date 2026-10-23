@@ -1,9 +1,9 @@
-# Khata360 — Product Vision Document
+# Expense Tracker — Product Vision Document
 
-**Status:** Working product vision | **Version:** 1.0 | **Updated:** 23 October 2026
+**Status:** Working product vision | **Version:** 1.1 | **Updated:** 23 October 2026
 
 ## 1. Vision
-Make expense awareness effortless for people who spend freely but do not consistently organize their spending. Khata360 is a mobile-first, low-friction way to capture expenses and understand where money goes, without making budgeting or spending restrictions the product's primary purpose.
+Make expense awareness effortless for people who spend freely but do not consistently organize their spending. Expense Tracker is a mobile-first, low-friction way to capture expenses and understand where money goes, without making budgeting or spending restrictions the product's primary purpose.
 
 ## 2. Problem
 Many financially comfortable, high-spending people do not have a clear picture of their spending. Individual expenses occur across multiple contexts and can be hard to classify into one neat category. Conventional expense trackers often demand detailed entry, rigid categories, or budgeting discipline. That friction discourages frequent use and leads to incomplete records and poor visibility.
@@ -67,4 +67,6 @@ Quantitative usability targets and business KPIs remain to be defined through re
 **Visibility and understanding over restriction.** The product should make expense tracking easy enough to become a habit for high spenders who would otherwise avoid financial administration.
 
 ---
+**Naming note:** Expense Tracker is the working name. Khata360 is a possible future brand name, not yet approved.
+
 **Source note:** Consolidated from the product-vision discussions in this project. The exact document uploaded to Claude Project Context was not directly accessible here, so this is a reconstructed version for review; confirm alignment before treating it as the definitive source of truth.
