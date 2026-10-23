@@ -1,6 +1,6 @@
 # SpendingSummaryCard — Component Specification
 
-**Version:** 0.1 (draft) | **Date:** 24 October 2026
+**Version:** 0.1.1 (draft) | **Date:** 24 October 2026
 **Sources:** `docs/PRODUCT_VISION.md` v1.1 · `design-system/STYLE_GUIDE.md` v0.2 · `design-system/tokens.json` v0.1.0 · `references/REFERENCE_CATALOG.md` v0.6
 **Primary reference:** REF-G01 (Groww — overline label, dominant amount, subordinate label/value rows)
 **Status:** Implementation-ready specification. No code.
@@ -57,7 +57,7 @@ SpendingSummaryCard is the first thing on the dashboard. It answers one question
 | `onRetry` | action | — | — | Used in `error` state. |
 
 **Calculation rules (SG-34):**
-- `total` = Σ amount of each expense dated in the period, **counted once regardless of how many tags it has**. Uncategorized and Unknown expenses are included.
+- `total` = Σ amount of each expense dated in the period, **counted once regardless of how many tags it has**. Uncategorized expenses (no tags) are included. *(0.1.1: Unknown reference removed per D-15.)*
 - `Expenses` = count of distinct expenses.
 - `vs last period` = this period's total − previous period's total (same distinct-expense rule).
 

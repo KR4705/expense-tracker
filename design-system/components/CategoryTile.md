@@ -1,16 +1,17 @@
 # CategoryTile — Component Specification
 
-**Version:** 0.1 (draft) | **Date:** 24 October 2026
-**Sources:** `docs/PRODUCT_VISION.md` v1.1 · `design-system/STYLE_GUIDE.md` v0.2 · `design-system/tokens.json` v0.1.0 · `references/REFERENCE_CATALOG.md` v0.6
+**Version:** 0.2 (draft) | **Date:** 24 October 2026
+**Sources:** `docs/PRODUCT_VISION.md` v1.2 · `design-system/STYLE_GUIDE.md` v0.3 · `design-system/tokens.json` v0.1.0 · `references/REFERENCE_CATALOG.md` v0.7 · `src/data/categories.json` v1.0.0
 **Primary references:** REF-P01 (PhonePe — equal-weight icon + label choices), REF-U01 (tinted selected row), REF-D01 (check icon as a non-color state cue)
-**Related:** [CategoryGrid](CategoryGrid.md) owns layout, multi-select bookkeeping and Unknown exclusivity across tiles.
+**Related:** [CategoryGrid](CategoryGrid.md) owns layout, multi-select bookkeeping, Other placement and inactive categories across tiles.
 **Status:** Implementation-ready specification. No code.
+**Change log:** 0.2 — approved category behavior (decisions D-15 – D-21): the Unknown variant and `exclusive` property are removed; Other is a standard tile; the disabled state is used for inactive categories (SG-45, resolves D-6). Token values unchanged.
 
 ---
 
 ## 1. Purpose and role
 
-CategoryTile is one selectable category on the Categories step (Step 2) of expense entry. Each tile shows an icon and a label and toggles on or off when tapped. Tiles are peers: none is promoted over another. A special variant, **Unknown**, looks identical but is mutually exclusive with all other categories.
+CategoryTile is one selectable category on the Categories step (Step 2) of expense entry. Each tile shows an icon and a label and toggles on or off when tapped. Tiles are peers: none is promoted over another. **Other** is a standard tile like every other category. Inactive categories appear in the disabled state and cannot be selected.
 
 The tile behaves as a **checkbox**, not a radio button, because an expense may carry zero, one or several tags.
 
@@ -20,7 +21,8 @@ The tile behaves as a **checkbox**, not a radio button, because an expense may c
 |---|---|
 | Each category combines a recognizable icon with a readable label; not color or words alone. | Vision §4.4 |
 | An expense can have zero, one or multiple tags (e.g. Food + Charity). | Vision §4.5 |
-| Unknown and Miscellaneous must be valid choices. | Vision §4.5 |
+| Other is a valid choice and combines with other tags; zero tags saves as Uncategorized. | Vision §4.5; D-15, D-19 |
+| Inactive categories are visible but cannot be selected. | D-18 |
 | Capture first, organize later; classification never blocks saving. | Vision §4.1, §4.7 |
 | Large, clearly tappable selection tiles; selection clearly acknowledged. | Vision §4.3, §4.6 |
 
@@ -52,14 +54,13 @@ The tile behaves as a **checkbox**, not a radio button, because an expense may c
 | Property | Type | Accepted values | Default | Notes |
 |---|---|---|---|---|
 | `categoryId` | identifier | Stable ID from the category list | — (required) | Used for selection state; never the label. |
-| `label` | text | 1–2 word noun, sentence case (e.g. `Food`, `Travel`, `Unknown`) | — (required) | ≤ 2 lines at default text size (SG-27). |
+| `label` | text | 1–2 word noun, sentence case (e.g. `Food`, `Travel`, `Other`) | — (required) | ≤ 2 lines at default text size (SG-27). |
 | `icon` | icon reference | One glyph from the product icon set | — (required) | Must be present; icon-only or label-only tiles are not allowed (SG-22). |
 | `selected` | boolean | `true`, `false` | `false` | Controlled by CategoryGrid. |
-| `exclusive` | boolean | `true`, `false` | `false` | `true` only for **Unknown**. Selecting an exclusive tile clears the others (handled by CategoryGrid, SG-26). |
-| `disabled` | boolean | `true`, `false` | `false` | Supported visually (SG-24 state table) but **no MVP screen disables a category** — see open decision D-6. |
+| `disabled` | boolean | `true`, `false` | `false` | `true` for an **inactive** category (`active: false` in the category data): shown in place, not selectable (SG-45, D-18; resolves D-6). |
 | `onToggle` | action | — | — (required) | Fires with the new selected value. |
 
-**Variants:** Standard and **Unknown**. Unknown uses a neutral question-mark icon, the label `Unknown`, `exclusive: true`, and **exactly the same tokens** as every other tile (SG-21, SG-26). **Miscellaneous** is a standard, non-exclusive tile.
+**Variants:** One standard tile. **Other** uses the label `Other`, the neutral "more" icon (`circle-ellipsis`) and **exactly the same tokens** as every other tile (SG-21, SG-26). There is no exclusive variant.
 
 ## 5. States
 
@@ -81,12 +82,10 @@ States combine: selected + focused, selected + pressed. Loading and error states
 
 1. **Toggle.** Tap / Space / screen-reader activate toggles `selected`. A second tap deselects. There is no long-press or swipe behavior.
 2. **Feedback.** Pressed fill appears within 100 ms; the change to selected or unselected animates over 150 ms (SG-19, SG-24). With reduced motion, the change is instant (SG-44).
-3. **Unknown exclusivity (SG-26).** The tile itself only reports the toggle; CategoryGrid applies the rule:
-   - Selecting **Unknown** clears all other selected tiles.
-   - Selecting any other tile while Unknown is selected clears Unknown.
-   - Deselecting Unknown leaves zero selections, which is valid.
-4. **No limit on selections (SG-25).** Any number of standard tiles may be selected together.
-5. **No blocking.** Tile state never disables the primary button (SG-20).
+3. **Other (SG-26).** Other toggles like any other tile. Selecting it never clears other tiles, and selecting other tiles never clears it. Deselecting every tile leaves zero selections, which is valid and is saved as Uncategorized.
+4. **Disabled (inactive) tiles (SG-45).** Tap, Space and screen-reader activation do nothing and no pressed state appears; the tile keeps its position.
+5. **No limit on selections (SG-25).** Any number of tiles may be selected together.
+6. **No blocking.** Tile state never disables the primary button (SG-20).
 
 ## 7. Accessibility requirements
 
@@ -94,8 +93,7 @@ States combine: selected + focused, selected + pressed. Loading and error states
 |---|---|---|
 | Role and state | Exposed as a **checkbox** with checked/unchecked state, e.g. "Food, checkbox, not checked". Never a radio button. | SG-25, SG-41 |
 | Accessible name | The visible label. The icon is decorative (hidden from assistive technology). | SG-22, SG-41 |
-| Unknown | Name/hint announces exclusivity: "Unknown, checkbox, not checked. Clears other categories." | SG-26, SG-41 |
-| Effects announced | When selecting Unknown clears other tiles, or a tile clears Unknown, CategoryGrid announces the result once (see CategoryGrid §7). | SG-26, SG-41 |
+| Disabled (inactive) | Exposed as a disabled checkbox that stays in reading order, e.g. "Charity, checkbox, not checked, unavailable"; it cannot be toggled. | SG-41, SG-45 |
 | Contrast | Unselected boundary 3.18:1 on white; selected border 6.03:1 on tint; label 18.11:1 on white and 16.30:1 on tint; check mark 6.70:1 on badge. | SG-06, SG-09, SG-24 |
 | Touch target | ≥ 96 × ~96 px, far above 48 px; tiles separated by 12 px. | SG-17, SG-23 |
 | Non-color cues | Border width, check badge, label weight — selection survives grayscale and color removal. | SG-24, SG-42 |
@@ -159,30 +157,32 @@ States combine: selected + focused, selected + pressed. Loading and error states
 | SG-09 Text Contrast Floor | Label contrast in all states. |
 | SG-17 Minimum Touch Targets | Tile far exceeds 48 px. |
 | SG-19 Button States | Pressed feedback timing; focus ring. |
-| SG-21 Equal-Weight Category Tiles | Identical size and styling for every tile, including Unknown. |
+| SG-21 Equal-Weight Category Tiles | Identical size and styling for every tile, including Other. |
 | SG-22 Icon Plus Label, Always | Required `icon` and `label`. |
 | SG-23 Tile Dimensions and Grid | Minimum size, radius. |
 | SG-24 Unmistakable Selected State | Four selection cues; 150 ms transition. |
 | SG-25 Multi-Select Behavior | Checkbox semantics; no selection limit. |
-| SG-26 Unknown Is a First-Class Choice | `exclusive` variant, identical styling. |
+| SG-26 Other and Uncategorized Are First-Class Choices | Other is a standard tile with identical styling; no exclusivity. |
 | SG-27 Category Label Rules | 1–2 words, ≤ 2 lines, no ellipsis. |
-| SG-41 Screen Reader Semantics | Checkbox role, name, exclusivity hint. |
+| SG-41 Screen Reader Semantics | Checkbox role, name, disabled state. |
 | SG-42 Non-Color Interaction States | Selection identifiable without color. |
 | SG-43 Text Scaling | Grow, wrap, never truncate. |
 | SG-44 Reduced Motion | Instant state change. |
+| SG-45 Inactive Categories Are Visible but Disabled | `disabled` for inactive categories; position unchanged; not selectable. |
 
 ## 11. Acceptance criteria
 
 1. Every tile has both a visible icon and a visible text label. *(SG-22)*
-2. In the unselected state, all tiles in a grid — including Unknown — have identical dimensions, border, icon size and label style. *(SG-21, SG-26)*
+2. In the unselected state, all tiles in a grid — including Other — have identical dimensions, border, icon size and label style. *(SG-21, SG-26)*
 3. Each tile is ≥ 96 px tall at default text size. *(SG-23)*
 4. Tapping an unselected tile selects it; tapping it again deselects it. Two standard tiles can be selected at once. *(SG-25)*
 5. Selected tiles show tint, 2 px accent border, check badge and semibold label; selection remains identifiable in grayscale and with the tint removed. *(SG-24, SG-42)*
 6. Pressed state appears within 100 ms; selection transition is 150 ms, or instant with reduced motion. *(SG-19, SG-24, SG-44)*
-7. Screen readers announce each tile as a checkbox with its checked state; Unknown also announces that it clears other categories. *(SG-25, SG-26, SG-41)*
+7. Screen readers announce each tile as a checkbox with its checked state; disabled tiles are announced as unavailable. *(SG-25, SG-41, SG-45)*
 8. No label exceeds 2 lines at default text size and no label shows an ellipsis. *(SG-27)*
 9. At 200 % text, labels remain fully visible and tiles grow rather than clip. *(SG-43)*
 10. Unselected border contrast ≥ 3:1 against the tile surface and screen background. *(SG-06)*
+11. A disabled (inactive) tile stays visible in its position and cannot be selected by tap, keyboard or screen reader. *(SG-45)*
 
 ## 12. Traceability
 
@@ -222,7 +222,7 @@ States combine: selected + focused, selected + pressed. Loading and error states
 | Label / icon color | `color.text.primary` *(shared semantic; gap G-6)* | SG-09 | — |
 | Check-badge inset | `space.1` *(shared foundation; gap G-7)* | SG-38 | — |
 | Checkbox role (multi-select) | — (behavioral) | SG-25, SG-41 | — |
-| Unknown exclusive variant | — (behavioral) | SG-26 | — |
+| Disabled for inactive categories | `component.categoryTile.disabled.*` | SG-45 | — |
 | Icon + label required | — (behavioral) | SG-22 | REF-P01 |
 
 **Complete chain example:**

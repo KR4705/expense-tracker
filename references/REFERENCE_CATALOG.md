@@ -1,6 +1,6 @@
 # Design Reference Catalog
 
-**Version:** 0.6 | **Updated:** 24 October 2026  
+**Version:** 0.7 | **Updated:** 24 October 2026  
 **Status:** Reference roles approved; individual screenshots remain candidate evidence.
 
 ## Purpose
@@ -24,7 +24,7 @@ REF-G01 and REF-G02 are **two screens within one Groww mobile design direction**
 1. When choices are peers, give them comparable visual weight and clear icon-plus-text affordances.
 2. When moving forward, show one dominant, consistently positioned next-step button.
 3. Display completed, current and upcoming steps with more than color alone.
-4. Treat categorization as a visual and potentially multi-select interaction; Unknown remains a valid option.
+4. Treat categorization as a visual and potentially multi-select interaction; Other remains a valid option, and saving with no category is allowed (Uncategorized). *(v0.7: Unknown replaced by Other, decision D-15.)*
 5. Start with a light, uncluttered screen and progressively reveal what matters.
 6. Organize the mobile dashboard from headline spending metric to trends and optional breakdowns. Multiple tags must not inflate overall spending totals.
 

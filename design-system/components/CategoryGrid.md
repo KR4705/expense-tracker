@@ -1,25 +1,27 @@
 # CategoryGrid — Component Specification
 
-**Version:** 0.1 (draft) | **Date:** 24 October 2026
-**Sources:** `docs/PRODUCT_VISION.md` v1.1 · `design-system/STYLE_GUIDE.md` v0.2 · `design-system/tokens.json` v0.1.0 · `references/REFERENCE_CATALOG.md` v0.6
+**Version:** 0.2 (draft) | **Date:** 24 October 2026
+**Sources:** `docs/PRODUCT_VISION.md` v1.2 · `design-system/STYLE_GUIDE.md` v0.3 · `design-system/tokens.json` v0.1.0 · `references/REFERENCE_CATALOG.md` v0.7 · `src/data/categories.json` v1.0.0
 **Primary reference:** REF-P01 (uniform icon + label grid)
 **Related:** contains [CategoryTile](CategoryTile.md); sits above [PrimaryActionButton](PrimaryActionButton.md) on Step 2.
 **Status:** Implementation-ready specification. No code.
+**Change log:** 0.2 — approved category behavior (decisions D-15 – D-21): Unknown exclusivity removed; Other is a non-exclusive tile, always last; inactive categories shown disabled in place (SG-45); approved MVP order recorded. D-4 withdrawn. Token values unchanged.
 
 ---
 
 ## 1. Purpose and role
 
-CategoryGrid is the body of the Categories step (Step 2). It lays out CategoryTiles in equal columns, owns the **selection set** for the expense, applies the **Unknown exclusivity rule**, and shows a live **selection summary** so users can confirm what they chose without scrolling back.
+CategoryGrid is the body of the Categories step (Step 2). It lays out CategoryTiles in equal columns, owns the **selection set** for the expense, keeps **Other** last, renders **inactive categories** disabled in place, and shows a live **selection summary** so users can confirm what they chose without scrolling back.
 
-It implements the product's "flexible tags, not forced buckets" model: zero, one or many tags; Unknown is valid; nothing is mandatory.
+It implements the product's "flexible tags, not forced buckets" model: zero, one or many tags; Other combines with any tag; zero tags is saved as Uncategorized; nothing is mandatory.
 
 ## 2. Relevant product requirements
 
 | Requirement | Source |
 |---|---|
 | Zero, one or multiple tags per expense; an expense need not fit one category. | Vision §4.5 |
-| Unknown and Miscellaneous are valid choices. | Vision §4.5 |
+| Other is a valid choice and combines with other tags. | Vision §4.5; D-15 |
+| Inactive categories are visible but cannot be selected. | D-18 |
 | Users can save expenses when the category is unclear. | Vision §4.1, §9 |
 | Visual categorization with icon + label tiles. | Vision §4.4 |
 | Progress and feedback; clearly acknowledge selection. | Vision §4.6 |
@@ -35,7 +37,7 @@ It implements the product's "flexible tags, not forced buckets" model: zero, one
  │ Tile │ │ Tile │ │ Tile │             (3) tiles, 3 equal columns
  └──────┘ └──────┘ └──────┘             (4) gap between tiles
  ┌──────┐ ┌──────┐ ┌──────┐
- │ Tile │ │ Misc │ │Unknwn│             (5) Unknown always last
+ │ Tile │ │ Tile │ │Other │             (5) Other always last
  └──────┘ └──────┘ └──────┘
  "2 selected: Food, Charity"            (6) selection summary
  [ Review ]  ← PrimaryActionButton (not part of this component)
@@ -47,24 +49,24 @@ It implements the product's "flexible tags, not forced buckets" model: zero, one
 | 2 | Helper text | States that categories are optional and multiple are allowed. |
 | 3 | Tiles | CategoryTile instances in a uniform grid. |
 | 4 | Gutters and gaps | Screen gutter outside, tile gap between. |
-| 5 | Unknown position | Fixed as the last tile. |
+| 5 | Other position | Fixed as the last tile. |
 | 6 | Selection summary | One line directly above the primary button; updates live. |
 
 ## 4. Properties and accepted values
 
 | Property | Type | Accepted values | Default | Notes |
 |---|---|---|---|---|
-| `categories` | ordered list | Category records (`categoryId`, `label`, `icon`, `exclusive`) | — (required) | Must contain exactly one `exclusive` category (Unknown), which the grid always renders last. |
+| `categories` | ordered list | Category records (`categoryId`, `label`, `icon`, `active`) from `src/data/categories.json` | — (required) | Must contain exactly one Other category, always rendered last. Records with `active: false` render as disabled tiles (SG-45). |
 | `selectedIds` | set of identifiers | 0…n IDs from `categories` | empty | Controlled value; preserved when navigating back and forward (SG-30). |
-| `onChange` | action | — | — (required) | Fires with the new selection set after exclusivity is applied. |
+| `onChange` | action | — | — (required) | Fires with the new selection set. |
 | `heading` | text | Plain question | `What was it for?` | Content proposal; wording to be confirmed. |
 | `helperText` | text | One line | `Choose any that fit — or skip` | Content proposal. |
 
 **Derived values (not inputs):**
-- `summary` — e.g. "No category selected", "1 selected: Food", "2 selected: Food, Charity", "Unknown".
+- `summary` — e.g. "No category selected", "1 selected: Food", "2 selected: Food, Other".
 - `columns` — computed from available width and text size (see §8).
 
-**Saved result:** zero selections are stored as **Uncategorized**; Unknown is stored as Unknown (SG-26).
+**Saved result:** zero selections are stored as **Uncategorized**; Other is stored as a normal tag (SG-26).
 
 ## 5. States
 
@@ -72,7 +74,7 @@ It implements the product's "flexible tags, not forced buckets" model: zero, one
 |---|---|---|
 | **No selection** | Valid. Summary reads "No category selected — you can still continue". Primary button enabled. | `typography.body.default`, `color.text.secondary` |
 | **One or more selected** | Tiles show selected state; summary lists labels in grid order. | Tile tokens; summary as above |
-| **Unknown selected** | Only Unknown is selected; summary reads "Unknown". | Tile tokens |
+| **Inactive category** | Tile shown in the disabled state in its normal position; cannot be selected (SG-45). | `component.categoryTile.disabled.*` |
 | **Focused tile** | Delegated to CategoryTile focused state. | `component.categoryTile.focused.ringColor` |
 | **Large text** | Grid reflows to 2 columns (see §8). | `component.categoryGrid.columnsLargeText` |
 | **Disabled / loading / error** | Not applicable to the grid in MVP. Category list is local; if it ever loads remotely, a separate spec is needed. | — |
@@ -84,15 +86,15 @@ It implements the product's "flexible tags, not forced buckets" model: zero, one
 - Selection order does not matter; the summary always lists labels in grid order so it does not jump around.
 - The grid never limits the number of selections and never forces at least one.
 
-### 6.2 Unknown exclusivity (SG-26)
+### 6.2 Other and inactive categories (SG-26, SG-45)
 | Current selection | User action | Result |
 |---|---|---|
-| Food, Charity | Select **Unknown** | Unknown only (Food, Charity cleared) |
-| Unknown | Select **Food** | Food only (Unknown cleared) |
-| Unknown | Deselect **Unknown** | Empty (valid → Uncategorized) |
-| Food | Select **Miscellaneous** | Food, Miscellaneous (Miscellaneous is not exclusive) |
+| Food, Charity | Select **Other** | Food, Charity, Other (nothing cleared) |
+| Other | Select **Food** | Food, Other |
+| Other | Deselect **Other** | Empty (valid → Uncategorized) |
+| Food | Tap an **inactive** tile | Food (no change; tile is disabled) |
 
-When selecting Unknown clears other tiles, the summary updates immediately and the change is announced (§7). There is no undo control in this version — see open decision D-4.
+No selection ever clears another; there is no exclusivity rule (D-15). D-4 (undo after clearing) is therefore withdrawn.
 
 ### 6.3 Continuing
 - The PrimaryActionButton ("Review") is **always enabled** on this step, including with zero selections (SG-20).
@@ -104,7 +106,8 @@ When selecting Unknown clears other tiles, the summary updates immediately and t
 
 ### 6.5 Order and placement
 - Category order is fixed by the category list, not by usage frequency, so tiles do not move between visits.
-- Unknown is always the last tile (SG-26).
+- Approved MVP order: Food, Home, Shop, Transit, Health, Fun, Travel, Charity, Other (D-17). It may be revised later from real user behavior, by changing the category list.
+- Other is always the last tile (SG-26). Inactive categories keep their position (SG-45).
 
 ## 7. Accessibility requirements
 
@@ -112,10 +115,10 @@ When selecting Unknown clears other tiles, the summary updates immediately and t
 |---|---|---|
 | Group semantics | The grid is a labelled group: "What was it for? Choose any that fit." Screen readers convey that multiple choices are allowed. | SG-25, SG-41 |
 | Tile semantics | Each tile is a checkbox (see CategoryTile §7). | SG-25, SG-41 |
-| Exclusivity announcements | Polite live-region message once per change: "Unknown selected. Food and Charity cleared." / "Food selected. Unknown cleared." | SG-26, SG-41 |
-| Summary | The summary line is a polite live region and reads e.g. "2 selected: Food, Charity". Announcements are not duplicated when an exclusivity message is already spoken. | SG-25, SG-41 |
+| Disabled tiles | Inactive tiles stay in reading order and are announced as unavailable (see CategoryTile §7). | SG-41, SG-45 |
+| Summary | The summary line is a polite live region and reads e.g. "2 selected: Food, Charity". | SG-25, SG-41 |
 | Reading order | Heading → helper → tiles in visual order (row by row) → summary → primary button. | SG-41 |
-| Unknown reachability | Unknown is visible without scrolling on 360 × 640, or reachable within one scroll; it is the last tile in reading order. | SG-26 |
+| Other reachability | Other is visible without scrolling on 360 × 640, or reachable within one scroll; it is the last tile in reading order. | SG-26 |
 | Touch spacing | 12 px between tiles (≥ 8 px minimum). | SG-17, SG-23 |
 | Text scaling | Drops to 2 columns rather than shrinking text. | SG-43 |
 
@@ -164,23 +167,24 @@ All tile appearance tokens are listed in [CategoryTile §9](CategoryTile.md#9-de
 | SG-21 Equal-Weight Category Tiles | Uniform columns and tiles. |
 | SG-23 Tile Dimensions and Grid | Column count, gap, 4-column threshold. |
 | SG-25 Multi-Select Behavior | Toggle set, no limits, live summary, carry to Review. |
-| SG-26 Unknown Is a First-Class Choice | Exclusivity, last position, Uncategorized when empty. |
+| SG-26 Other and Uncategorized Are First-Class Choices | Other last and non-exclusive; Uncategorized when empty. |
 | SG-30 Back Navigation Preserves Everything | Selection preserved. |
 | SG-32 Error Recovery Without Data Loss | Selection survives failed save. |
 | SG-38 4-Point Spacing Scale | Gaps and section spacing. |
 | SG-39 Mobile-First Layout Frame | Gutters and width cap. |
 | SG-41 Screen Reader Semantics | Group label, live announcements. |
 | SG-43 Text Scaling | Two-column fallback. |
+| SG-45 Inactive Categories Are Visible but Disabled | Inactive records rendered disabled, in place. |
 
 ## 11. Acceptance criteria
 
 1. Selecting two standard tiles keeps both selected; the summary reads "2 selected: …" with both labels. *(SG-25)*
-2. With Food and Charity selected, selecting Unknown leaves exactly one selection (Unknown); selecting Food afterwards leaves exactly Food. *(SG-26)*
-3. Miscellaneous combines with other categories without clearing them. *(SG-26)*
+2. With Food and Charity selected, selecting Other leaves all three selected. *(SG-26)*
+3. An inactive category appears in the disabled state in its normal position, and tapping it does not change the selection. *(SG-45)*
 4. With zero selections, Review is enabled and the saved expense is recorded as Uncategorized. *(SG-20, SG-26)*
-5. Unknown is the last tile and is visible without scrolling on a 360 × 640 viewport, or reachable within one scroll for long lists. *(SG-26)*
+5. Other is the last tile and is visible without scrolling on a 360 × 640 viewport, or reachable within one scroll for long lists. *(SG-26)*
 6. At 360 px width and default text size, the grid shows 3 columns of tiles ≥ 96 × 96 px with 12 px gaps. *(SG-23)*
-7. Exclusivity changes are announced once by screen readers, naming what was cleared. *(SG-26, SG-41)*
+7. Each selection change is announced once through the summary live region. *(SG-25, SG-41)*
 8. Navigating back to Amount and forward again restores the same selection. *(SG-30)*
 9. At 200 % text, the grid shows 2 columns and no label is truncated. *(SG-43)*
 10. The category order is identical across visits. *(SG-21)*
@@ -201,8 +205,8 @@ All tile appearance tokens are listed in [CategoryTile §9](CategoryTile.md#9-de
 | Helper / summary style | `typography.body.default`, `color.text.secondary` | SG-13, SG-25 | — |
 | Multi-select set (0…n) | — (behavioral) | SG-25 | — |
 | Live selection summary | — (behavioral) | SG-25 | — |
-| Unknown exclusivity | — (behavioral) | SG-26 | — |
-| Unknown last position | — (behavioral) | SG-26 | — |
+| Inactive shown disabled, in place | `component.categoryTile.disabled.*` | SG-45 | — |
+| Other last position | — (behavioral) | SG-26 | — |
 | Empty selection → Uncategorized | — (behavioral) | SG-26 | — |
 | Primary never disabled here | — (behavioral) | SG-20 | — |
 | Selection preserved | — (behavioral) | SG-30, SG-32 | — |
