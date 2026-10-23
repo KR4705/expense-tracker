@@ -51,18 +51,36 @@ describe('valid data', () => {
     assert.deepEqual(validateIconRegistry(realRegistry), []);
   });
 
-  test('contains the decided categories, largest expected spend first, Other last', () => {
+  test('uses the approved MVP display order, Other last', () => {
     assert.deepEqual(
       realData.categories.map((c) => c.label),
-      ['Food', 'Shop', 'Home', 'Transit', 'Fun', 'Health', 'Travel', 'Charity', 'Other'],
+      ['Food', 'Home', 'Shop', 'Transit', 'Health', 'Fun', 'Travel', 'Charity', 'Other'],
+    );
+    assert.deepEqual(
+      realData.categories.map((c) => c.displayOrder),
+      [1, 2, 3, 4, 5, 6, 7, 8, 9],
     );
   });
 
-  test('keeps the approved IDs and has no Bills or Unknown category', () => {
+  test('keeps the approved stable IDs and has no Bills or Unknown category', () => {
     assert.deepEqual(
       realData.categories.map((c) => c.id),
-      ['food', 'shopping', 'housing', 'transport', 'entertainment', 'healthcare', 'travel', 'charity', 'other'],
+      ['food', 'housing', 'shopping', 'transport', 'healthcare', 'entertainment', 'travel', 'charity', 'other'],
     );
+  });
+
+  test('every category is active (inactive would mean shown but disabled)', () => {
+    assert.ok(realData.categories.every((c) => c.active === true));
+  });
+
+  test('Other has no exclusive flag — it combines with other categories', () => {
+    const other = realData.categories.find((c) => c.id === 'other');
+    assert.equal('exclusive' in other, false);
+    assert.ok(realData.categories.every((c) => !('exclusive' in c)));
+  });
+
+  test('Uncategorized is a save state, not a category', () => {
+    assert.ok(realData.categories.every((c) => c.id !== 'uncategorized' && c.label !== 'Uncategorized'));
   });
 
   test('Other is active, last and uses the reserved icon', () => {
@@ -72,10 +90,10 @@ describe('valid data', () => {
     assert.equal(other.icon, realRegistry.otherIcon);
   });
 
-  test('entries awaiting confirmation stay provisional', () => {
-    assert.equal(realData.status, 'provisional');
-    const provisional = realData.categories.filter((c) => c.status === 'provisional').map((c) => c.id);
-    assert.deepEqual(provisional, ['housing', 'transport', 'other']);
+  test('the file, every category and the icon set are approved for the MVP', () => {
+    assert.equal(realData.status, 'approved');
+    assert.ok(realData.categories.every((c) => c.status === 'approved'));
+    assert.equal(realRegistry.status, 'approved');
   });
 
   test('a minimal dataset (one category + Other) passes', () => {

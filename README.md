@@ -26,7 +26,7 @@ These are product intentions, not yet validated usability outcomes.
 | [Component specifications](design-system/components/README.md) | Appearance and behavior of the seven MVP components |
 | `src/` | Application source code (React + TypeScript) |
 | `scripts/build-tokens.mjs` | Token-to-CSS-variable generator |
-| [Category data](src/data/README.md) | Category list, icon registry, display-order evidence, validation rules and items still to confirm |
+| [Category data](src/data/README.md) | Approved category list, icon registry, display-order evidence and validation rules |
 
 ## Design reference directions
 
@@ -37,7 +37,7 @@ These are product intentions, not yet validated usability outcomes.
 
 ## Current stage
 
-**Frontend foundation.** The style guide, tokens and component specifications are in place. The frontend is set up with Vite, React and TypeScript, and currently shows a placeholder screen inside the mobile-first app shell. The category dataset in `src/data/` is validated and mostly approved; a few items still need confirmation. The expense-entry flow, category selection UI and dashboard have not been built yet.
+**Frontend foundation.** The style guide, tokens and component specifications are in place. The frontend is set up with Vite, React and TypeScript, and currently shows a placeholder screen inside the mobile-first app shell. The category dataset in `src/data/` is validated and approved for the initial MVP. The expense-entry flow, category selection UI and dashboard have not been built yet.
 
 This repository documents the product and design process as decisions develop.
 
