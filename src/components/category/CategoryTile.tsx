@@ -1,3 +1,4 @@
+import { Check } from 'lucide-react';
 import { CATEGORY_ICONS } from './categoryIcons.ts';
 import styles from './CategoryTile.module.css';
 
@@ -44,6 +45,11 @@ export function CategoryTile({ categoryId, label, icon, selected, disabled = fal
       <span className={styles.label} data-tile-label="">
         {label}
       </span>
+      {selected ? (
+        <span className={styles.badge} aria-hidden="true">
+          <Check className={styles.badgeIcon} aria-hidden="true" focusable="false" />
+        </span>
+      ) : null}
     </label>
   );
 }
