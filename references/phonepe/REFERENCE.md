@@ -1,13 +1,15 @@
-# PhonePe — REF-P01 / REF-P02
+# PhonePe — Equal-weight choices (REF-P01)
+
+**Approved inspiration:** Multiple parallel actions displayed with comparable visual importance; unmistakable large icon + label targets.
+
+**Use for:** expense category tiles, multi-select tags, optional source selection.
+
+**Desired behavior:** each category has a deliberate visual marker and readable label; selection is obvious; no choice is artificially emphasized before user selection.
+
+**Avoid:** dense super-app home layout, payment jargon and copying branded visuals.
 
 Sources:
 - https://design.phonepe.com/stories/role-of-design-at-scale
 - https://design.phonepe.com/stories/behind-phonepe-redesign
 
-Observe: everyday action discoverability, icons that users already recognize, and consistency for novices and experienced users.
-
-Apply to Expense Tracker: icon + text category tiles, large obvious Add Expense entry, predictable button locations.
-
-Avoid: copying the high-density super-app homepage; copying PhonePe branding or proprietary artwork.
-
-Screenshot selection: pending. Use official article visuals as reference while the repo is public.
+Screenshot target: mobile screen with equal-weight action options. Screenshot not added yet.
