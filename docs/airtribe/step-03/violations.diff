@@ -1,0 +1,44 @@
+diff --git a/src/components/category/CategoryTile.module.css b/src/components/category/CategoryTile.module.css
+index 38e610e..36edfd8 100644
+--- a/src/components/category/CategoryTile.module.css
++++ b/src/components/category/CategoryTile.module.css
+@@ -15,7 +15,7 @@
+   gap: var(--component-category-tile-content-gap);
+   min-width: 0;
+   min-height: var(--component-category-tile-min-height);
+-  padding: var(--component-category-tile-padding);
++  padding: 10px;
+   border-radius: var(--component-category-tile-radius);
+   background-color: var(--component-category-tile-default-background);
+   box-shadow: inset 0 0 0 var(--component-category-tile-default-border-width) var(--component-category-tile-default-border);
+@@ -66,6 +66,9 @@
+ .label {
+   max-width: 100%;
+   text-align: center;
++  white-space: nowrap;
++  overflow: hidden;
++  text-overflow: ellipsis;
+   overflow-wrap: normal;
+   hyphens: manual;
+   font-family: var(--component-category-tile-default-typography-font-family);
+diff --git a/src/components/category/CategoryTile.tsx b/src/components/category/CategoryTile.tsx
+index 5039bd4..f9767a9 100644
+--- a/src/components/category/CategoryTile.tsx
++++ b/src/components/category/CategoryTile.tsx
+@@ -1,4 +1,3 @@
+-import { Check } from 'lucide-react';
+ import { CATEGORY_ICONS } from './categoryIcons.ts';
+ import styles from './CategoryTile.module.css';
+ 
+@@ -45,11 +44,6 @@ export function CategoryTile({ categoryId, label, icon, selected, disabled = fal
+       <span className={styles.label} data-tile-label="">
+         {label}
+       </span>
+-      {selected ? (
+-        <span className={styles.badge} aria-hidden="true">
+-          <Check className={styles.badgeIcon} aria-hidden="true" focusable="false" />
+-        </span>
+-      ) : null}
+     </label>
+   );
+ }
