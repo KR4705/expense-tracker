@@ -1,0 +1,78 @@
+{
+  "type": "result",
+  "subtype": "success",
+  "is_error": false,
+  "terminal_reason": "completed",
+  "stop_reason": "end_turn",
+  "session_id": "ae1a87d4-363b-5b2a-95d3-885a9714190f",
+  "num_turns": 14,
+  "duration_ms": 199315,
+  "duration_api_ms": 198351,
+  "total_cost_usd": 0.8374464,
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 126490,
+    "cache_read_input_tokens": 583559,
+    "output_tokens": 27290,
+    "output_tokens_details": {
+      "thinking_tokens": 12107
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 126490,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 6763,
+        "cache_read_input_tokens": 146852,
+        "cache_creation_input_tokens": 10907,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 10907
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "modelUsage": {
+    "claude-haiku-5-5": {
+      "inputTokens": 1975,
+      "outputTokens": 18,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 0,
+      "costUSD": 0.00020650000000000003,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 0,
+      "canonicalModel": "claude-haiku-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    },
+    "claude-sonnet-5-5": {
+      "inputTokens": 12,
+      "outputTokens": 27290,
+      "cacheReadInputTokens": 583559,
+      "cacheCreationInputTokens": 126490,
+      "webSearchRequests": 0,
+      "costUSD": 0.8372399,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 64000,
+      "thinkingTokens": 12107,
+      "canonicalModel": "claude-sonnet-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "permission_denials": [],
+  "subagents_spawned": 0
+}
