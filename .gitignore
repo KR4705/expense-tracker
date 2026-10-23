@@ -6,3 +6,9 @@ dist/
 build/
 .next/
 .DS_Store
+
+# Generated from design-system/tokens.json by `npm run tokens`
+src/styles/tokens.css
+
+# Vercel CLI
+.vercel

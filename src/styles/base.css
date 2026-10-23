@@ -1,0 +1,41 @@
+/*
+ * Global base styles. Every color, size and spacing value comes from a token
+ * custom property defined in tokens.css (generated from design-system/tokens.json).
+ * Do not add raw values here; add or change tokens at the source instead.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  /* Light theme only (SG-05). */
+  color-scheme: light;
+  background-color: var(--color-background-app);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: var(--color-background-app);
+  color: var(--color-text-primary);
+  font-family: var(--typography-body-large-font-family);
+  font-size: var(--typography-body-large-font-size);
+  font-weight: var(--typography-body-large-font-weight);
+  line-height: var(--typography-body-large-line-height);
+  letter-spacing: var(--typography-body-large-letter-spacing);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
