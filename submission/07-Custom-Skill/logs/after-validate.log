@@ -1,0 +1,395 @@
+
+> expense-tracker@0.1.0 validate
+> npm run tokens:validate && npm run categories:validate && npm test && npm run typecheck
+
+
+> expense-tracker@0.1.0 tokens:validate
+> node scripts/build-tokens.mjs --check
+
+tokens: OK — 218 tokens (v0.1.0) validated, 314 CSS properties would be generated
+
+> expense-tracker@0.1.0 categories:validate
+> node scripts/validate-categories.mjs
+
+categories: OK — 9 categories (9 active, 0 provisional), v1.0.0, status approved
+
+> expense-tracker@0.1.0 test
+> npm run test:data && npm run test:ui
+
+
+> expense-tracker@0.1.0 test:data
+> node --test tests/*.test.mjs
+
+TAP version 13
+# Subtest: valid data
+    # Subtest: the committed dataset passes
+    ok 1 - the committed dataset passes
+      ---
+      duration_ms: 2.653768
+      type: 'test'
+      ...
+    # Subtest: the committed icon registry passes
+    ok 2 - the committed icon registry passes
+      ---
+      duration_ms: 0.161611
+      type: 'test'
+      ...
+    # Subtest: uses the approved MVP display order, Other last
+    ok 3 - uses the approved MVP display order, Other last
+      ---
+      duration_ms: 1.28631
+      type: 'test'
+      ...
+    # Subtest: keeps the approved stable IDs and has no Bills or Unknown category
+    ok 4 - keeps the approved stable IDs and has no Bills or Unknown category
+      ---
+      duration_ms: 0.261036
+      type: 'test'
+      ...
+    # Subtest: every category is active (inactive would mean shown but disabled)
+    ok 5 - every category is active (inactive would mean shown but disabled)
+      ---
+      duration_ms: 0.184976
+      type: 'test'
+      ...
+    # Subtest: Other has no exclusive flag — it combines with other categories
+    ok 6 - Other has no exclusive flag — it combines with other categories
+      ---
+      duration_ms: 0.159839
+      type: 'test'
+      ...
+    # Subtest: Uncategorized is a save state, not a category
+    ok 7 - Uncategorized is a save state, not a category
+      ---
+      duration_ms: 0.174499
+      type: 'test'
+      ...
+    # Subtest: Other is active, last and uses the reserved icon
+    ok 8 - Other is active, last and uses the reserved icon
+      ---
+      duration_ms: 0.193993
+      type: 'test'
+      ...
+    # Subtest: the file, every category and the icon set are approved for the MVP
+    ok 9 - the file, every category and the icon set are approved for the MVP
+      ---
+      duration_ms: 0.272088
+      type: 'test'
+      ...
+    # Subtest: a minimal dataset (one category + Other) passes
+    ok 10 - a minimal dataset (one category + Other) passes
+      ---
+      duration_ms: 0.539667
+      type: 'test'
+      ...
+    # Subtest: two-word sentence-case labels and gaps in displayOrder are allowed
+    ok 11 - two-word sentence-case labels and gaps in displayOrder are allowed
+      ---
+      duration_ms: 0.669081
+      type: 'test'
+      ...
+    # Subtest: an inactive standard category is allowed (shown but not selectable)
+    ok 12 - an inactive standard category is allowed (shown but not selectable)
+      ---
+      duration_ms: 0.389205
+      type: 'test'
+      ...
+    # Subtest: CLI exits 0 on the committed data
+    ok 13 - CLI exits 0 on the committed data
+      ---
+      duration_ms: 37.68365
+      type: 'test'
+      ...
+    1..13
+ok 1 - valid data
+  ---
+  duration_ms: 46.173926
+  type: 'suite'
+  ...
+# Subtest: required fields and types
+    # Subtest: missing "id" is rejected
+    ok 1 - missing "id" is rejected
+      ---
+      duration_ms: 0.542914
+      type: 'test'
+      ...
+    # Subtest: missing "label" is rejected
+    ok 2 - missing "label" is rejected
+      ---
+      duration_ms: 1.013346
+      type: 'test'
+      ...
+    # Subtest: missing "icon" is rejected
+    ok 3 - missing "icon" is rejected
+      ---
+      duration_ms: 0.253757
+      type: 'test'
+      ...
+    # Subtest: missing "displayOrder" is rejected
+    ok 4 - missing "displayOrder" is rejected
+      ---
+      duration_ms: 0.234348
+      type: 'test'
+      ...
+    # Subtest: missing "active" is rejected
+    ok 5 - missing "active" is rejected
+      ---
+      duration_ms: 0.176814
+      type: 'test'
+      ...
+    # Subtest: missing "status" is rejected
+    ok 6 - missing "status" is rejected
+      ---
+      duration_ms: 0.280074
+      type: 'test'
+      ...
+    # Subtest: wrong types are rejected
+    ok 7 - wrong types are rejected
+      ---
+      duration_ms: 0.318896
+      type: 'test'
+      ...
+    # Subtest: unknown fields are rejected (including the removed "exclusive" flag)
+    ok 8 - unknown fields are rejected (including the removed "exclusive" flag)
+      ---
+      duration_ms: 0.341084
+      type: 'test'
+      ...
+    # Subtest: an invalid status is rejected
+    ok 9 - an invalid status is rejected
+      ---
+      duration_ms: 0.232372
+      type: 'test'
+      ...
+    # Subtest: a missing or empty categories list is rejected
+    ok 10 - a missing or empty categories list is rejected
+      ---
+      duration_ms: 0.298114
+      type: 'test'
+      ...
+    # Subtest: a non-semver file version is rejected
+    ok 11 - a non-semver file version is rejected
+      ---
+      duration_ms: 0.238842
+      type: 'test'
+      ...
+    1..11
+ok 2 - required fields and types
+  ---
+  duration_ms: 4.268901
+  type: 'suite'
+  ...
+# Subtest: IDs and labels
+    # Subtest: duplicate IDs are rejected
+    ok 1 - duplicate IDs are rejected
+      ---
+      duration_ms: 0.270129
+      type: 'test'
+      ...
+    # Subtest: non-kebab-case IDs are rejected
+    ok 2 - non-kebab-case IDs are rejected
+      ---
+      duration_ms: 0.16659
+      type: 'test'
+      ...
+    # Subtest: the reserved "uncategorized" ID is rejected
+    ok 3 - the reserved "uncategorized" ID is rejected
+      ---
+      duration_ms: 0.16836
+      type: 'test'
+      ...
+    # Subtest: re-adding an "unknown" category is rejected
+    ok 4 - re-adding an "unknown" category is rejected
+      ---
+      duration_ms: 0.24187
+      type: 'test'
+      ...
+    # Subtest: duplicate labels (case-insensitive) are rejected
+    ok 5 - duplicate labels (case-insensitive) are rejected
+      ---
+      duration_ms: 0.221401
+      type: 'test'
+      ...
+    # Subtest: labels longer than two words are rejected (SG-27)
+    ok 6 - labels longer than two words are rejected (SG-27)
+      ---
+      duration_ms: 0.407781
+      type: 'test'
+      ...
+    # Subtest: labels not in sentence case are rejected (SG-27)
+    ok 7 - labels not in sentence case are rejected (SG-27)
+      ---
+      duration_ms: 0.298006
+      type: 'test'
+      ...
+    # Subtest: empty or padded labels are rejected
+    ok 8 - empty or padded labels are rejected
+      ---
+      duration_ms: 0.25157
+      type: 'test'
+      ...
+    1..8
+ok 3 - IDs and labels
+  ---
+  duration_ms: 2.240503
+  type: 'suite'
+  ...
+# Subtest: ordering
+    # Subtest: duplicate displayOrder values are rejected
+    ok 1 - duplicate displayOrder values are rejected
+      ---
+      duration_ms: 0.232965
+      type: 'test'
+      ...
+    # Subtest: zero or negative displayOrder is rejected
+    ok 2 - zero or negative displayOrder is rejected
+      ---
+      duration_ms: 0.19713
+      type: 'test'
+      ...
+    # Subtest: a list not sorted by displayOrder is rejected
+    ok 3 - a list not sorted by displayOrder is rejected
+      ---
+      duration_ms: 0.271553
+      type: 'test'
+      ...
+    1..3
+ok 4 - ordering
+  ---
+  duration_ms: 0.814763
+  type: 'suite'
+  ...
+# Subtest: icons
+    # Subtest: an icon not in the registry is rejected
+    ok 1 - an icon not in the registry is rejected
+      ---
+      duration_ms: 0.283108
+      type: 'test'
+      ...
+    # Subtest: two categories sharing an icon are rejected (SG-21, SG-22)
+    ok 2 - two categories sharing an icon are rejected (SG-21, SG-22)
+      ---
+      duration_ms: 0.205476
+      type: 'test'
+      ...
+    # Subtest: the Other icon cannot be used by another category
+    ok 3 - the Other icon cannot be used by another category
+      ---
+      duration_ms: 0.249734
+      type: 'test'
+      ...
+    # Subtest: a registry whose otherIcon is not listed is rejected
+    ok 4 - a registry whose otherIcon is not listed is rejected
+      ---
+      duration_ms: 0.178457
+      type: 'test'
+      ...
+    # Subtest: a registry with duplicate icon IDs is rejected
+    ok 5 - a registry with duplicate icon IDs is rejected
+      ---
+      duration_ms: 0.128664
+      type: 'test'
+      ...
+    1..5
+ok 5 - icons
+  ---
+  duration_ms: 1.296845
+  type: 'suite'
+  ...
+# Subtest: Other rules
+    # Subtest: a dataset without Other is rejected
+    ok 1 - a dataset without Other is rejected
+      ---
+      duration_ms: 0.257393
+      type: 'test'
+      ...
+    # Subtest: Other not in last position is rejected
+    ok 2 - Other not in last position is rejected
+      ---
+      duration_ms: 0.557005
+      type: 'test'
+      ...
+    # Subtest: inactive Other is rejected (it must always be selectable)
+    ok 3 - inactive Other is rejected (it must always be selectable)
+      ---
+      duration_ms: 0.213129
+      type: 'test'
+      ...
+    # Subtest: Other with a different label is rejected
+    ok 4 - Other with a different label is rejected
+      ---
+      duration_ms: 0.178666
+      type: 'test'
+      ...
+    # Subtest: Other with a different icon is rejected
+    ok 5 - Other with a different icon is rejected
+      ---
+      duration_ms: 0.162225
+      type: 'test'
+      ...
+    # Subtest: a dataset with only Other active is rejected
+    ok 6 - a dataset with only Other active is rejected
+      ---
+      duration_ms: 0.21022
+      type: 'test'
+      ...
+    1..6
+ok 6 - Other rules
+  ---
+  duration_ms: 2.275981
+  type: 'suite'
+  ...
+# Subtest: CLI
+    # Subtest: exits 1 and lists errors for an invalid file
+    ok 1 - exits 1 and lists errors for an invalid file
+      ---
+      duration_ms: 39.27031
+      type: 'test'
+      ...
+    # Subtest: exits 1 for malformed JSON
+    ok 2 - exits 1 for malformed JSON
+      ---
+      duration_ms: 36.253811
+      type: 'test'
+      ...
+    1..2
+ok 7 - CLI
+  ---
+  duration_ms: 75.661552
+  type: 'suite'
+  ...
+1..7
+# tests 48
+# suites 7
+# pass 48
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 239.290127
+
+> expense-tracker@0.1.0 test:ui
+> vitest run
+
+
+ RUN  v5.0.5 /home/claude/expense-tracker
+
+
+ Test Files  3 passed (3)
+      Tests  30 passed (30)
+   Start at  06:18:25
+   Duration  5.92s (tests 41%, environment 38%, import 9%, transform 6%, setup 6%)
+
+Environment  jsdom was created 3 times · 2.11s total, 38% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+
+
+> expense-tracker@0.1.0 typecheck
+> npm run tokens && tsc -b
+
+
+> expense-tracker@0.1.0 tokens
+> node scripts/build-tokens.mjs
+
+tokens: wrote src/styles/tokens.css — 314 CSS properties from 218 tokens (v0.1.0)
