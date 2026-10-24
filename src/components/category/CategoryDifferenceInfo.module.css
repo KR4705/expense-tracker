@@ -1,0 +1,185 @@
+/*
+ * CategoryDifferenceInfo — Airtribe Step 5 (category-ambiguity-helper skill).
+ * Every value is an existing token from design-system/tokens.json, except the
+ * backdrop colour (gap G-8 below). No animation (SG-44); no shadows (tokens.json
+ * has no elevation tokens; surfaces are identified by borders, SG-06).
+ */
+
+/* Supporting row beside the grid: prompt text + icon button. */
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--layout-control-min-gap);
+}
+
+/* Supporting text (SG-03): body size, secondary colour. */
+.prompt {
+  color: var(--color-text-secondary);
+  font-family: var(--typography-body-default-font-family);
+  font-size: var(--typography-body-default-font-size);
+  font-weight: var(--typography-body-default-font-weight);
+  line-height: var(--typography-body-default-line-height);
+  letter-spacing: var(--typography-body-default-letter-spacing);
+}
+
+/*
+ * Icon button (Style Guide §E, "Secondary button appearance", Icon button: info):
+ * 48 px circle, white fill, outline, 24 px icon. 48 px target (SG-17).
+ * Outline uses color.border.control for a ≥ 3:1 boundary (SG-06).
+ */
+.iconButton {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--size-touch-target-min);
+  height: var(--size-touch-target-min);
+  padding: 0;
+  border: var(--border-width-thin) solid var(--color-action-secondary-border);
+  border-radius: var(--radius-full);
+  background-color: var(--color-action-secondary-background);
+  color: var(--color-action-secondary-foreground);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.iconButton:active {
+  background-color: var(--color-surface-subtle);
+}
+
+/* SG-19 focus ring: 2 px accent, 2 px offset (PrimaryActionButton tokens reused, as in CategoryTile G-3). */
+.iconButton:focus-visible,
+.closeButton:focus-visible {
+  outline: var(--border-width-thick) solid var(--color-focus-ring);
+  outline-offset: var(--component-primary-action-button-focused-ring-offset);
+}
+
+.infoIcon {
+  width: var(--size-icon-md);
+  height: var(--size-icon-md);
+  stroke-width: var(--size-icon-stroke-width);
+}
+
+/*
+ * G-8 — backdrop colour. tokens.json has no scrim/overlay token. Interim value:
+ * primary text colour at 40 % via color-mix. Proposed: color.overlay.scrim.
+ */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: calc(var(--layout-screen-gutter) + env(safe-area-inset-bottom, 0px)) var(--layout-screen-gutter);
+  background-color: color-mix(in srgb, var(--color-text-primary) 40%, transparent);
+}
+
+/* Sheet-like panel at the bottom of the screen (SG-04 progressive disclosure, REF-G01 bottom sheet). */
+.dialog {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+  max-width: var(--layout-screen-max-content-width);
+  max-height: 100%;
+  overflow-y: auto;
+  padding: var(--layout-card-padding);
+  border: var(--border-width-thin) solid var(--color-border-divider);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-default);
+  color: var(--color-text-primary);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--typography-heading-2-font-family);
+  font-size: var(--typography-heading-2-font-size);
+  font-weight: var(--typography-heading-2-font-weight);
+  line-height: var(--typography-heading-2-line-height);
+  letter-spacing: var(--typography-heading-2-letter-spacing);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+/* Same icon plate as CategoryTile (SG-22), so each entry is recognisable as its tile. */
+.plate {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--component-category-tile-icon-plate-size);
+  height: var(--component-category-tile-icon-plate-size);
+  border-radius: 50%;
+  background-color: var(--component-category-tile-default-icon-plate);
+}
+
+.itemIcon {
+  width: var(--size-icon-md);
+  height: var(--size-icon-md);
+  stroke-width: var(--size-icon-stroke-width);
+}
+
+.itemText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.itemLabel {
+  font-family: var(--typography-label-tile-selected-font-family);
+  font-size: var(--typography-label-tile-selected-font-size);
+  font-weight: var(--typography-label-tile-selected-font-weight);
+  line-height: var(--typography-label-tile-selected-line-height);
+  letter-spacing: var(--typography-label-tile-selected-letter-spacing);
+}
+
+.itemDescription,
+.note {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-family: var(--typography-body-default-font-family);
+  font-size: var(--typography-body-default-font-size);
+  font-weight: var(--typography-body-default-font-weight);
+  line-height: var(--typography-body-default-line-height);
+  letter-spacing: var(--typography-body-default-letter-spacing);
+}
+
+/* Secondary button (Style Guide §E): white fill, 1 px control border, primary-text label, 48 px tall. */
+.closeButton {
+  min-height: var(--size-touch-target-min);
+  padding: 0 var(--space-4);
+  border: var(--border-width-thin) solid var(--color-action-secondary-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-action-secondary-background);
+  color: var(--color-action-secondary-foreground);
+  font-family: var(--typography-label-button-font-family);
+  font-size: var(--typography-label-button-font-size);
+  font-weight: var(--typography-label-button-font-weight);
+  line-height: var(--typography-label-button-line-height);
+  letter-spacing: var(--typography-label-button-letter-spacing);
+  cursor: pointer;
+}
+
+.closeButton:active {
+  background-color: var(--color-surface-subtle);
+}

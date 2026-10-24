@@ -1,7 +1,14 @@
 import { useId, useState } from 'react';
+import { CategoryDifferenceInfo } from '../components/category/CategoryDifferenceInfo.tsx';
 import { CategoryGrid } from '../components/category/CategoryGrid.tsx';
 import { getCategories, type Category } from '../data/categories.ts';
 import styles from './CategorySelectionPage.module.css';
+
+/**
+ * Categories whose approved descriptions overlap: Transit is "day-to-day travel",
+ * Travel is "trips away from home". See docs/airtribe/step5/ for the analysis.
+ */
+const AMBIGUOUS_CATEGORY_IDS = ['transport', 'travel'] as const;
 
 interface CategorySelectionPageProps {
   /** Defaults to the bundled src/data/categories.json. */
@@ -27,6 +34,8 @@ export function CategorySelectionPage({ categories = getCategories() }: Category
         <p id={helperId} className={styles.helper}>
           Choose any that fit — or skip
         </p>
+        {/* Transit vs Travel: the one ambiguity found by the category-ambiguity-helper skill (Step 5). */}
+        <CategoryDifferenceInfo categories={categories} categoryIds={AMBIGUOUS_CATEGORY_IDS} />
       </header>
       <CategoryGrid
         categories={categories}
